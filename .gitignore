@@ -123,3 +123,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+MA5_CutReader.py
+MA5_SafReader.py
