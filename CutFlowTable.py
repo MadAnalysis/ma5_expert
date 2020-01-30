@@ -4,6 +4,7 @@
 Created on Thu Jan 30 17:50:43 2020
 
 @author: jackaraz
+contact: jackaraz@gmail.com
 """
 from MA5_CutReader import *
 
