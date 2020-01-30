@@ -1,5 +1,6 @@
 import numpy as np
 import os
+from MA5_SafReader import *
 
 """
 ma5_path = '/home/jack/packages/dev_ma5/v1.8.28/madanalysis5/'
@@ -110,11 +111,14 @@ class SR(object):
         
         
 class SR_collection(object):
-    def __init__(self, SR_collection_path='', sample_file=False, xsection=1, dataset=False, collection_name=''):
+    def __init__(self, SR_collection_path='', saf_file=False, xsection=-1, dataset=False, collection_name=''):
         self.SR_collection_path = os.path.normpath(SR_collection_path+'/')
         self.type               = 'SR_collection'
-        self.sample_file        = sample_file
-        self.xsec               = xsection
+        if saf_file != False:
+            self.saf            = SAF(saf_file=saf_file)
+            self.xsec           = self.saf.xsec
+        if xsection > 0 and saf_file != False:
+            self.xsec               = xsection
         self.dataset_info       = dataset
         self.collection_name    = collection_name
         if os.path.isdir(SR_collection_path):
