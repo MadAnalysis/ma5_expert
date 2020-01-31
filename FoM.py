@@ -9,7 +9,7 @@ Created on Fri Jan 31 11:44:54 2020
 
 from numpy import sqrt, log, power
 
-class FOM:
+class FoM:
     def __init__(self,nsignal,nbkg,sys=0.):
         self.nsignal = nsignal
         self.nbkg    = nbkg
