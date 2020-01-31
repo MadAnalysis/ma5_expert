@@ -73,6 +73,7 @@ class SignalRegion(object):
     def __getitem__(self,cut_num):
         return self.cutlist[cut_num]
 
+    @classmethod
     def __type__(self):
         return __name__
 
