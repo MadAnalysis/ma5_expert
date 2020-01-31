@@ -24,6 +24,9 @@ class FoM:
         self.S_SB = round(nsignal/(nbkg+nsignal),8)
     
     def asimovZ(self):
+        """
+            arXiv:1007.1727
+        """
         try:
             varb = self.nbkg*self.sys*self.nbkg*self.sys
             tot  = self.nsignal + self.nbkg
