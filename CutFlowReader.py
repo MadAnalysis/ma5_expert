@@ -17,6 +17,8 @@ class Collection:
         self.SR_collection_path = ''
         if os.path.isdir(collection_path):
             self.collection_path = os.path.normpath(collection_path+'/')
+        else:
+            raise ValueError("Can't find the collection path! "+ collection_path)
         if saf_file != False:
             self.saf            = SAF(saf_file=saf_file, 
                                       xsection=kwargs.get('xsection',-1))

@@ -16,7 +16,7 @@ class FoM:
         self.sys     = sys
         
         if sys > 0.:
-            self.ZA      = self.asimov()
+            self.ZA      = self.asimovZ()
             self.ZA_err  = self.asimovError()
             self.sig_sys = self.significance()
         self.sig  = round(nsignal/sqrt(nbkg),8)

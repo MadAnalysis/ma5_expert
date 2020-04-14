@@ -6,7 +6,7 @@ Created on Thu Jan 30 17:50:43 2020
 @author: jackaraz
 contact: jackaraz@gmail.com
 """
-from MA5_CutReader import *
+from CutFlowReader import *
 
 def Experimental_CutFlow(SR,SR_name,cut_flow):
     if len(SR_name) != len(cut_flow):
@@ -47,7 +47,7 @@ def compare(*args,**kwargs):
     
     sr_list = list(args)
     print ''.ljust(54, '='),sr_list[0].name
-    size = sr_list[0].size()
+    size = len(sr_list[0])
     print ''.ljust(55, ' ') + 'ATLAS'.ljust(15, ' ') + ' | '+'MA5'.ljust(15, ' ') + ' | '+'MA5/ATLAS'.ljust(8, ' ') + ' | '
     #print ''.ljust(55, ' ') + '------'.ljust(6, ' ') + ' | '+'------'.ljust(6, ' ') + ' | '+'--------'.ljust(8, ' ') + ' | '
 
@@ -59,9 +59,11 @@ def compare(*args,**kwargs):
         for sr in range(len(sr_list)):
             txt += str(round(sr_list[sr][cut].Nevents,1)).ljust(6, ' ') + ' | '
             txt += str(round(sr_list[sr][cut].rel_eff,3)).ljust(6, ' ') + ' | '
-            if sr>0:
+            if sr>0 and sr_list[0][cut].Nevents>0:
                 txt += str(round(sr_list[1][cut].Nevents/\
                                  sr_list[0][cut].Nevents,3)).ljust(9, ' ') + ' | '
+            #else:
+                #txt += ' '.ljust(9, ' ') + ' | '
         if cut % 2 == 0 and colored:
             txt += u' \u001b[0m' 
         print txt

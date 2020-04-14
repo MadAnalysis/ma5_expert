@@ -15,7 +15,9 @@ class SAF:
         if kwargs.get('saf_file',False) != False:
             if os.path.isfile(kwargs.get('saf_file','NaN')):
                 self.saf_file = kwargs.get('saf_file','NaN')
-        if kwargs.get('load',False) == False and self.saf_file != False:
+            else:
+                raise ValueError('Can not find the SAF file!')
+        if kwargs.get('load',False) == False and self.saf_file!=False:
             self.saf = self.saf_parse()
         elif kwargs.get('load',False) != False:
             self.saf = self.load(kwargs.get('load',False))
