@@ -7,6 +7,7 @@ Created on Thu Jan 30 17:50:43 2020
 contact: jackaraz@gmail.com
 """
 from CutFlowReader import *
+from FoM import FoM
 
 
 class CutFlowTable:
@@ -103,6 +104,138 @@ class CutFlowTable:
                         txt += ' & '  
                     else:
                         txt += r'\\'
+                txt += '\n'
+
+            txt+='    \\end{tabular}\n'
+            txt+='    \\caption{'+SR.replace('_',' ')+\
+            (cut.Nentries<100)*'(This SR needs more event:: MC event count = {:.0f})'.format(cut.Nentries)+'}\n' 
+            txt+='  \\end{center}\n'
+            txt+='\\end{table}\n'
+            if file != None:
+                file.write(txt)
+            else:
+                print(txt)
+    
+    def write_signal_comparison_table(self,*args,**kwargs):
+        """
+
+        Parameters
+        ----------
+        *args : FILE
+            Optional, if there is a file input, tables will be written in the 
+            file otherwise all will be printed on the screen.
+        **kwargs : 
+            sys : FLOAT
+                Systematic uncertainty, default 20%
+        Returns
+        -------
+        Signal over Background comparison table.
+
+        """
+        sys = kwargs.get('sys',0.2)
+        file = None
+        if len(args) > 0:
+            file = args[0]
+        for SR in self.ref_sample.keys():
+            txt = '\n\n%% '+SR+'\n\n'
+            txt+='\\begin{table}[h]\n'
+            txt+='  \\begin{center}\n'
+            txt+='  \\renewcommand{\\arraystretch}{1.}\n'
+            n_rows = len(self.samples)
+            txt+='    \\begin{tabular}{c||cc|'+'|'.join(['cc']*(n_rows))+'}\n'
+            txt+='      & '
+
+            # Write header of the table
+            txt += '\\multicolumn{2}{c|}{'+self.ref_name+'} &'
+            for smp in self.sample_names:
+                txt += '\\multicolumn{2}{c'+(self.sample_names.index(smp) != len(self.sample_names)-1)*'|'+'}{'+smp+'} '
+                if not self.sample_names.index(smp) == len(self.sample_names)-1:
+                    txt += '&'
+                else:
+                    txt += '\\\ \\hline\\hline\n'
+            txt +='      & Events & $\\varepsilon$ &'
+            for smp in self.sample_names:
+                txt += 'Events & $\\varepsilon$ '
+                if not self.sample_names.index(smp) == len(self.sample_names)-1:
+                    txt += ' & '
+                else:
+                    txt += '\\\ \\hline\n'
+            # write cutflow
+            for cutID, cut in self.ref_sample[SR].items():
+                name = cut.Name
+                if '$' not in name:
+                    name = name.replace('_',' ')
+                txt += '      '+name.ljust(40,' ') + '& '
+                if cutID == 0:
+                    txt += '{:.1f} & - &'.format(cut.Nevents,cut.rel_eff*100.)
+                else:
+                    txt += '{:.1f} & {:.1f}\\% &'.format(cut.Nevents,cut.rel_eff*100.)
+                
+                for sample in self.samples:
+                    smp = sample[SR]
+                    if cutID == 0:
+                        txt += '{:.1f} & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff*100.)
+                    elif cutID > 0 and cut.rel_eff == 0:
+                        txt += '{:.1f} & {:.1f}\\% '.format(smp[cutID].Nevents,smp[cutID].rel_eff*100.)
+                    else:
+                        txt += '{:.1f} & {:.1f}\\% '.format(smp[cutID].Nevents,smp[cutID].rel_eff*100.)
+                    if smp != self.samples[-1][SR]:
+                        txt += ' & '  
+                    else:
+                        txt += r'\\'
+
+                if cut == self.ref_sample[SR].get_final_cut():
+                    txt += r'\hline\hline'
+                    fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
+                    txt += '\n     \\multicolumn{3}{c}{$S/B$} &'
+                    for sample in self.samples:
+                        smp = sample[SR]
+                        txt += '\\multicolumn{2}{c}{'+'{:.3f}\\%'.format(100.*fom.S_B)+'}'
+                        if smp != self.samples[-1][SR]:
+                            txt += ' & ' 
+                        else:
+                            txt += r'\\'
+ 
+                    txt += '\n     \\multicolumn{3}{c}{$S/S+B$} &'
+                    for sample in self.samples:
+                        smp = sample[SR]
+                        txt += '\\multicolumn{2}{c}{'+'{:.3f}\\%'.format(100.*fom.S_SB)+'}'
+                        if smp != self.samples[-1][SR]:
+                            txt += ' & ' 
+                        else:
+                            txt += r'\\'
+
+                               
+                    txt += '\n     \\multicolumn{3}{c}{$S/\sqrt{B}$}  &'
+                    for sample in self.samples:
+                        smp = sample[SR]
+                        txt += '\\multicolumn{2}{c}{'+\
+                                '{:.3f}'.format(fom.sig)+'}'
+                        if smp != self.samples[-1][SR]:
+                            txt += ' & ' 
+                        else:
+                            txt += r'\\'
+                    
+                    txt += '\n     \\multicolumn{3}{c}{$S/\sqrt{B+(B\Delta_{sys})^2}$}  &'
+                    for sample in self.samples:
+                        smp = sample[SR]
+                        txt += '\\multicolumn{2}{c}{'+\
+                                '{:.3f}'.format(fom.sig_sys)+'}'
+                        if smp != self.samples[-1][SR]:
+                            txt += ' & ' 
+                        else:
+                            txt += r'\\'
+                            
+                    txt += '\n     \\multicolumn{3}{c}{$Z_A$} &'
+                    for sample in self.samples:
+                        smp = sample[SR]
+                        txt += '\\multicolumn{2}{c}{'+\
+                                '${:.3f} \\pm {:.3f} $'.format(fom.ZA,fom.ZA_err)+'}'
+                        if smp != self.samples[-1][SR]:
+                            txt += ' & ' 
+                        else:
+                            txt += r'\\'
+                    
                 txt += '\n'
 
             txt+='    \\end{tabular}\n'
