@@ -7,7 +7,36 @@ Collects the signal regions under the main CutFlow path and constructs a collect
 
 ```python
 from MA5lib.CutFlowReader import Collection
-SRcollection = Collection(collection_path='CutFlow',saf_file='_dataset.saf', lumi=139.0)
+from MA5lib.CutFlowTable import CutFlowTable
+# overwrite lumi to 1/1000 to set xsec as initial number of events.
+Delphes = Collection(collection_path=ma5_path+'cms_sus_16_048_delphes/Output/SAF/defaultset/cms_sus_16_048/Cutflows',
+                     saf_file=ma5_path+'cms_sus_16_048_delphes/Output/SAF/defaultset/defaultset.saf', 
+                     lumi=1./1000.,xsection=172004.)
+Jets    = Collection(collection_path=ma5_path+'cms_sus_16_048_jets/Output/SAF/defaultset/cms_sus_16_048/Cutflows',
+                     saf_file=ma5_path+'cms_sus_16_048_delphes/Output/SAF/defaultset/defaultset.saf', 
+                     lumi=1./1000.,xsection=172004.)
+Const   = Collection(collection_path=ma5_path+'cms_sus_16_048_const/Output/SAF/defaultset/cms_sus_16_048/Cutflows',
+                     saf_file=ma5_path+'cms_sus_16_048_delphes/Output/SAF/defaultset/defaultset.saf', 
+                     lumi=1./1000.,xsection=172004.)
+
+table = CutFlowTable(Delphes,Jets,Const,sample_names=['Delphes','SFS [Jets]','SFS [Constituents]'])
+
+file = open('cms_sus_16_048.tex','w')
+file.write(r'\documentclass[11pt]{article}'+'\n'+\
+           r'\usepackage{pdflscape}'+'\n'+\
+           r'\begin{document}'+'\n'+\
+           r'\begin{landscape}'+'\n\n\n\n')
+
+table.write_signal_comparison_table(file) 
+# to write in to a file give the file obj as input. 
+# This will create signal vs bkg comparison table
+
+file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
+file.close()
+
+table.write_comparison_table() 
+# to write in to a file give the file obj as input. 
+# This will create sample comparison table
 ```
 
 ## TODO
