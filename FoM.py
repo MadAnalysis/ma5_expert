@@ -19,9 +19,9 @@ class FoM:
             self.ZA      = self.asimovZ()
             self.ZA_err  = self.asimovError()
             self.sig_sys = self.significance()
-        self.sig  = round(nsignal/sqrt(nbkg),8)
-        self.S_B  = round(nsignal/nbkg,8)
-        self.S_SB = round(nsignal/(nbkg+nsignal),8)
+        self.sig  = nsignal/sqrt(nbkg)
+        self.S_B  = nsignal/nbkg
+        self.S_SB = nsignal/(nbkg+nsignal)
     
     def asimovZ(self):
         """

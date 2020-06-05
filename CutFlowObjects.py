@@ -81,7 +81,7 @@ class SignalRegion(object):
         return len(self.cutlist)
 
     def items(self):
-        return [(i,self.cutlist[i]) for i in range(self.size())]
+        return [(i,self.cutlist[i]) for i in range(len(self.cutlist))]
 
     def add_cut(self,cut):
         self.cutlist.append(cut)
