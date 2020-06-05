@@ -40,7 +40,7 @@ class CutFlowTable:
         self.sample_names.remove(self.ref_name)
         self.samples = samples
     
-    def write_tex(self,*args):
+    def write_comparison_table(self,*args):
         """
         Parameters
         ----------

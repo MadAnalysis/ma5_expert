@@ -14,14 +14,21 @@ class FoM:
         self.nsignal = nsignal
         self.nbkg    = nbkg
         self.sys     = sys
-        
-        if sys > 0.:
-            self.ZA      = self.asimovZ()
-            self.ZA_err  = self.asimovError()
-            self.sig_sys = self.significance()
-        self.sig  = nsignal/sqrt(nbkg)
-        self.S_B  = nsignal/nbkg
-        self.S_SB = nsignal/(nbkg+nsignal)
+        if nbkg == 0.:
+            self.ZA      = -1
+            self.ZA_err  = -1
+            self.sig_sys = -1
+            self.sig     = -1
+            self.S_B     = -1
+            self.S_SB    = -1
+        else:
+            if sys > 0.:
+                self.ZA      = self.asimovZ()
+                self.ZA_err  = self.asimovError()
+                self.sig_sys = self.significance()
+            self.sig  = nsignal/sqrt(nbkg)
+            self.S_B  = nsignal/nbkg
+            self.S_SB = nsignal/(nbkg+nsignal)
     
     def asimovZ(self):
         """
