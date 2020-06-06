@@ -41,22 +41,28 @@ class CutFlowTable:
         self.sample_names.remove(self.ref_name)
         self.samples = samples
     
-    def write_comparison_table(self,*args):
+    def write_comparison_table(self,*args,**kwargs):
         """
         Parameters
         ----------
         *args : FILE
             Optional, if there is a file input, tables will be written in the 
             file otherwise all will be printed on the screen.
-
+        **kwargs : 
+            only_alive : BOOLEAN (default True)
+                only write the SRs which has more than zero yield for reference
+                collection.
         Returns
         -------
         LaTeX tables of signal regions.
         """
+        SR_list = self.ref_sample.keys()
+        if kwargs.get('only_alive',True): 
+            SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
         file = None
         if len(args) > 0:
             file = args[0]
-        for SR in self.ref_sample.keys():
+        for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
