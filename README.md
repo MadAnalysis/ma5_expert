@@ -1,4 +1,4 @@
-# MA5lib
+# MadAnalysis 5 Interpreter For Expert Mode
  MA5 analysis output reader for expert mode. Parse the signal collection and construct cutflow.
 
 * CutFlowReader:
