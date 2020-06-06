@@ -6,8 +6,8 @@
 Collects the signal regions under the main CutFlow path and constructs a collection of signal regions.
 
 ```python
-from MA5lib.CutFlowReader import Collection
-from MA5lib.CutFlowTable import CutFlowTable
+from ma5_expert.CutFlowReader import Collection
+from ma5_expert.CutFlowTable  import CutFlowTable
 
 # overwrite lumi to 1/1000 to set xsec as initial number of events.
 # by default first sample is the refference sample (or bkg) 
