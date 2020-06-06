@@ -127,7 +127,7 @@ class CutFlowTable:
         **kwargs : 
             sys : FLOAT ]0,1]
                 Systematic uncertainty, default 20%
-            alive : BOOLEAN (default True)
+            only_alive : BOOLEAN (default True)
                 only write the SRs which has more than zero yield for reference
                 collection.
         Returns
@@ -136,13 +136,13 @@ class CutFlowTable:
 
         """
         sys = kwargs.get('sys',0.2)
-        alive = kwargs.get('alive',True)
+        SR_list = self.ref_sample.keys()
+        if kwargs.get('only_alive',True): 
+            SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
         file = None
         if len(args) > 0:
             file = args[0]
-        for SR in self.ref_sample.keys():
-            if not self.ref_sample[SR].isAlive() and alive:
-                continue
+        for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
