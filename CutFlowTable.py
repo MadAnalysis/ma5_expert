@@ -125,18 +125,24 @@ class CutFlowTable:
             Optional, if there is a file input, tables will be written in the 
             file otherwise all will be printed on the screen.
         **kwargs : 
-            sys : FLOAT
+            sys : FLOAT ]0,1]
                 Systematic uncertainty, default 20%
+            alive : BOOLEAN (default True)
+                only write the SRs which has more than zero yield for reference
+                collection.
         Returns
         -------
         Signal over Background comparison table.
 
         """
         sys = kwargs.get('sys',0.2)
+        alive = kwargs.get('alive',True)
         file = None
         if len(args) > 0:
             file = args[0]
         for SR in self.ref_sample.keys():
+            if not self.ref_sample[SR].isAlive() and alive:
+                continue
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
