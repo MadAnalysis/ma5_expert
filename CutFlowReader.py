@@ -14,6 +14,32 @@ from CutFlowObjects import Cut, SignalRegion
 
 class Collection:
     def __init__(self, collection_path='', saf_file=False, **kwargs):
+        """
+
+        Parameters
+        ----------
+        collection_path : STR
+            The path where all the cutflow saf files exist. The default is ''.
+        saf_file : STR, optional
+            Sample information file. The default is False.
+        **kwargs : 
+            xsection : FLOAT
+                Cross section value overwrite. The default is -1
+            ID : STR 
+                Name of the collection. The default is SR-Collection
+            lumi : FLOAT
+                Luminosity overwrite. The Default is 1e-3
+
+        Raises
+        ------
+        ValueError
+            Raised if can't find collection path.
+
+        Returns
+        -------
+        Cut flow collection.
+
+        """
         self.SR_collection_path = ''
         if os.path.isdir(collection_path):
             self.collection_path = os.path.normpath(collection_path+'/')
@@ -29,7 +55,8 @@ class Collection:
         self.SRdict             = {}
         self.regiondata         = {}
         self.readCollection()
-        self.SRdict             = self.set_lumi(kwargs.get('lumi',-1))
+        # If lumi is not given just set it to xsec [pb]
+        self.SRdict             = self.set_lumi(kwargs.get('lumi',1.0e-3))
 
     
     def __getattr__(self, name):

@@ -9,6 +9,30 @@ Created on Fri Jan 31 10:37:07 2020
 
 class Cut(object):
     def __init__(self,Name=-1,Nentries=-1,sumw=-1,sumw2=-1, precut=None,cut_0=None, xsec=1.):
+        """
+
+        Parameters
+        ----------
+        Name : STR, optional
+            Name of the cut. The default is -1.
+        Nentries : FLOAT, optional
+            Number of entries. The default is -1.
+        sumw : FLOAT, optional
+            Sum of weights. The default is -1.
+        sumw2 : FLOAT, optional
+            Square of sum of weights. The default is -1.
+        precut : Cut, optional
+            Previous cut. The default is None.
+        cut_0 : Cut, optional
+            Initial cut. The default is None.
+        xsec : FLOAT, optional
+            Cross section. The default is 1..
+
+        Returns
+        -------
+        None.
+
+        """
         self.Name     = str(Name)
         self.Nentries = Nentries
         self.type     = 'Cut'
