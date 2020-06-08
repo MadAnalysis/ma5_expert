@@ -41,10 +41,6 @@ class Collection:
 
         """
         self.SR_collection_path = ''
-        if os.path.isdir(collection_path):
-            self.collection_path = os.path.normpath(collection_path+'/')
-        else:
-            raise ValueError("Can't find the collection path! "+ collection_path)
         if saf_file != False:
             self.saf            = SAF(saf_file=saf_file, 
                                       xsection=kwargs.get('xsection',-1))
@@ -54,7 +50,13 @@ class Collection:
         self.collection_name    = kwargs.get('ID','SR-Collection')
         self.SRdict             = {}
         self.regiondata         = {}
-        self.readCollection()
+
+        if collection_path != '':
+            if os.path.isdir(collection_path):
+                self.collection_path = os.path.normpath(collection_path+'/')
+                self.readCollection()
+            else:
+                raise ValueError("Can't find the collection path! "+ collection_path)
         # If lumi is not given just set it to xsec [pb]
         self.SRdict             = self.set_lumi(kwargs.get('lumi',1.0e-3))
 
@@ -74,17 +76,27 @@ class Collection:
     
     def keys(self):
         return self.SRdict.keys()
-    
+
     def items(self):
         return self.SRdict.items()
-    
-    def add_SR(self,SR):
-        if SR.size() == 0:
-            print(SR.name, ' has no cut')
-        else:
-            self.SRdict[SR.name] = SR
+
+    def add_SR(self,SR_name,cut_names,cut_values):
+        if len(cut_names) != len(cut_values):
+            raise ValueError("Cut names does not match with the values: {:.0f} != {:.0f}".format(len(cut_names),len(cut_values)))
+        SR = SignalRegion(SR_name)
+        for ix, (name, val) in enumerate(zip(cut_names,cut_values)):
+            if ix == 0:
+                current_cut = Cut(Name=name, xsec=val)
+                cut_0       = current_cut
+                precut      = current_cut
+            else:
+                current_cut = Cut(Name=name, precut=precut,cut_0=cut_0, xsec=val)
+                precut      = current_cut
+            SR.add_cut(current_cut)
+        self.SRdict[SR_name] = SR
         return self
-    
+
+
     def Print(self,*args):
         for key, item in self.items():
             print('Signal Region : ', key)
@@ -149,3 +161,6 @@ class Collection:
                 i+=1
             self.SRdict[currentSR.name] = currentSR
             self.regiondata[currentSR.name] = currentSR.regiondata()
+
+
+# def writeExperimentalCollection(cut_names,values)
