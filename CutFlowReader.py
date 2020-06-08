@@ -60,13 +60,6 @@ class Collection:
         # If lumi is not given just set it to xsec [pb]
         self.SRdict             = self.set_lumi(kwargs.get('lumi',1.0e-3))
 
-    
-    # def __getattr__(self, name):
-    #     if name in self.__dict__['SRdict'].keys():
-    #         return self.__dict__['SRdict'][name]
-    #     else:
-    #         return False
-
     @classmethod
     def __type__(self):
         return __name__
@@ -160,6 +153,3 @@ class Collection:
                 i+=1
             self.SRdict[currentSR.name] = currentSR
             self.regiondata[currentSR.name] = currentSR.regiondata()
-
-
-# def writeExperimentalCollection(cut_names,values)

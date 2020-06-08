@@ -111,10 +111,10 @@ class CutFlowTable:
                     else:
                         txt += r'\\'
                 txt += '\n'
-
+            entries = [x.Nentries for x in [cut]+[sample[SR].get_final_cut() for sample in self.samples]]
             txt+='    \\end{tabular}\n'
             txt+='    \\caption{'+SR.replace('_',' ')+\
-            (cut.Nentries<100)*'(This SR needs more event:: MC event count = {:.0f})'.format(cut.Nentries)+'}\n' 
+            (any([x<100 for x in entries]))*' (This SR needs more event:: MC event count = '+', '.join(entries)+')}\n' 
             txt+='  \\end{center}\n'
             txt+='\\end{table}\n'
             if file != None:
