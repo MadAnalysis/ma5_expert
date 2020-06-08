@@ -94,7 +94,6 @@ class Collection:
                 precut      = current_cut
             SR.add_cut(current_cut)
         self.SRdict[SR_name] = SR
-        return self
 
 
     def Print(self,*args):
