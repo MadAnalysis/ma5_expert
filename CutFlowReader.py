@@ -61,11 +61,11 @@ class Collection:
         self.SRdict             = self.set_lumi(kwargs.get('lumi',1.0e-3))
 
     
-    def __getattr__(self, name):
-        if name in self.__dict__['SRdict'].keys():
-            return self.__dict__['SRdict'][name]
-        else:
-            return False
+    # def __getattr__(self, name):
+    #     if name in self.__dict__['SRdict'].keys():
+    #         return self.__dict__['SRdict'][name]
+    #     else:
+    #         return False
 
     @classmethod
     def __type__(self):
