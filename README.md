@@ -46,6 +46,37 @@ table.write_comparison_table()
 # This will create a sample comparison table
 ```
 
+One can also add a cutflow from another table instead of Ma5 framework. But SR and cut names should match if one wants to write a table
+```python
+ATLAS = Collection() 
+ATLAS.add_SR('MySR',['cut 0','cut 1','cut 2'],[10,5,1])
+```
+
+`ATLAS.Print()` will print the following output
+
+```
+('Signal Region : ', 'MySR')
+============
+cut 0
+Nentries: -1
+Nevents : 10.000
+Cut Eff : 1.00000
+Rel Eff : 1.00000
+============
+cut 1
+Nentries: -1
+Nevents : 5.000
+Cut Eff : 0.50000
+Rel Eff : 0.50000
+============
+cut 2
+Nentries: -1
+Nevents : 1.000
+Cut Eff : 0.10000
+Rel Eff : 0.20000
+```
+
+
 ## TODO
 
 - [ ] Clean cutflow reader needs optimization and clarity
