@@ -41,6 +41,9 @@ class CutFlowTable:
         self.sample_names.remove(self.ref_name)
         self.samples = samples
     
+    def _sorter(self,x):
+        return self.ref_sample[x].get_final_cut().Nentries
+    
     def write_comparison_table(self,*args,**kwargs):
         """
         Parameters
@@ -59,6 +62,7 @@ class CutFlowTable:
         SR_list = self.ref_sample.keys()
         if kwargs.get('only_alive',True): 
             SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
+        SR_list.sort(key=self._sorter, reverse=True)
         file = None
         if len(args) > 0:
             file = args[0]
@@ -147,6 +151,7 @@ class CutFlowTable:
         SR_list = self.ref_sample.keys()
         if kwargs.get('only_alive',True): 
             SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
+        SR_list.sort(key=self._sorter, reverse=True)
         file = None
         if len(args) > 0:
             file = args[0]
