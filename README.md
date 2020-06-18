@@ -1,5 +1,5 @@
 # MadAnalysis 5 Interpreter For Expert Mode
- MA5 analysis output reader for expert mode. Parse the signal collection and construct cutflow.
+ MA5 analysis output interpreter for expert mode. Parse the signal collection and construct cutflow (histogram interpreter coming soon). 
 
 # How to get LaTeX output of the cutflow:
 
@@ -74,6 +74,20 @@ Nentries: -1
 Nevents : 1.000
 Cut Eff : 0.10000
 Rel Eff : 0.20000
+```
+
+## Citation 
+Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
+```
+@article{1801696,
+    author = "Araz, Jack Y. and Fuks, Benjamin and Polykratis, Georgios",
+    title = "{Simplified fast detector simulation in MadAnalysis 5}",
+    eprint = "2006.09387",
+    archivePrefix = "arXiv",
+    primaryClass = "hep-ph",
+    month = "6",
+    year = "2020"
+}
 ```
 
 
