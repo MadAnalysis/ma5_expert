@@ -130,10 +130,10 @@ class CutFlowTable:
             txt+='\\end{table}\n'
             if file != None:
                 file.write(txt)
-                file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
             else:
                 print(txt)
         if file != None:
+            file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
             self.WriteMake(file,make=kwargs.get('make',True))
     
     def write_signal_comparison_table(self,*args,**kwargs):
@@ -290,6 +290,8 @@ class CutFlowTable:
                     os.system('make')
                 except:
                     print 'Compilation failed.'
+        else:
+            raise ValueError('Can not find '+file.name)
 
 
 
