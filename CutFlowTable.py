@@ -97,19 +97,19 @@ class CutFlowTable:
                     name = name.replace('_',' ')
                 txt += '      '+name.ljust(40,' ') + '& '
                 if cutID == 0:
-                    txt += '{:.1f} & - &'.format(cut.Nevents,cut.rel_eff*100.)
+                    txt += '{:.1f} & - &'.format(cut.Nevents)
                 else:
-                    txt += '{:.1f} & {:.1f}\\% &'.format(cut.Nevents,cut.rel_eff*100.)
+                    txt += '{:.1f} & {:.3f} &'.format(cut.Nevents,cut.rel_eff)
                 
                 for sample in self.samples:
                     smp = sample[SR]
                     if cutID == 0:
-                        txt += '{:.1f} & - & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff*100.)
+                        txt += '{:.1f} & - & - '.format(smp[cutID].Nevents)
                     elif cutID > 0 and cut.rel_eff == 0:
-                        txt += '{:.1f} & {:.1f}\\% & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff*100.)
+                        txt += '{:.1f} & {:.3f} & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff)
                     else:
                         rel_eff =1-(smp[cutID].rel_eff/cut.rel_eff)
-                        txt += '{:.1f} & {:.1f}\\% & {:.1f}\\%'.format(smp[cutID].Nevents,smp[cutID].rel_eff*100.,rel_eff*100.)
+                        txt += '{:.1f} & {:.3f} & {:.1f}\\%'.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
                     if smp != self.samples[-1][SR]:
                         txt += ' & '  
                     else:

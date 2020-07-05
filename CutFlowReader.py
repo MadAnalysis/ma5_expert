@@ -73,17 +73,19 @@ class Collection:
     def items(self):
         return self.SRdict.items()
 
-    def add_SR(self,SR_name,cut_names,cut_values):
+    def add_SR(self,SR_name,cut_names,cut_values,raw=[]):
         if len(cut_names) != len(cut_values):
             raise ValueError("Cut names does not match with the values: {:.0f} != {:.0f}".format(len(cut_names),len(cut_values)))
+        if raw == []:
+            raw = [1000]*len(cut_names)
         SR = SignalRegion(SR_name)
-        for ix, (name, val) in enumerate(zip(cut_names,cut_values)):
+        for ix, (name, val, entries) in enumerate(zip(cut_names,cut_values,raw)):
             if ix == 0:
-                current_cut = Cut(Name=name, xsec=val)
+                current_cut = Cut(Name=name, xsec=val, Nentries=entries)
                 cut_0       = current_cut
                 precut      = current_cut
             else:
-                current_cut = Cut(Name=name, precut=precut,cut_0=cut_0, xsec=val)
+                current_cut = Cut(Name=name, precut=precut,cut_0=cut_0, xsec=val, Nentries=entries)
                 precut      = current_cut
             SR.add_cut(current_cut)
         self.SRdict[SR_name] = SR
