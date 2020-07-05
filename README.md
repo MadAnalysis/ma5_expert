@@ -28,18 +28,9 @@ Const   = Collection(collection_path=ma5_path+'cms_sus_16_048_const/Output/SAF/d
 
 table = CutFlowTable(Delphes,Jets,Const,sample_names=['Delphes','SFS [Jets]','SFS [Constituents]'])
 
-file = open('cms_sus_16_048.tex','w')
-file.write(r'\documentclass[11pt]{article}'+'\n'+\
-           r'\usepackage{pdflscape}'+'\n'+\
-           r'\begin{document}'+'\n'+\
-           r'\begin{landscape}'+'\n\n\n\n')
-
-table.write_signal_comparison_table(file) 
+table.write_signal_comparison_table(open('cms_sus_16_048.tex','w')) 
 # to write in to a file give the file obj as input. 
 # This will create signal vs bkg comparison table
-
-file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
-file.close()
 
 table.write_comparison_table() 
 # this will print the table on the screen. 
