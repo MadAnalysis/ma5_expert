@@ -90,7 +90,7 @@ class CutFlowTable:
                     txt += '\\\ \\hline\\hline\n'
             txt +='      & Events & $\\varepsilon$ &'
             for smp in self.sample_names:
-                txt += 'Events & $\\varepsilon$ & Ratio [\%]'
+                txt += 'Events & $\\varepsilon$ & $\\delta$ [\%]'
                 if not self.sample_names.index(smp) == len(self.sample_names)-1:
                     txt += ' & '
                 else:
