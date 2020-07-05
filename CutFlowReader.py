@@ -78,6 +78,9 @@ class Collection:
             raise ValueError("Cut names does not match with the values: {:.0f} != {:.0f}".format(len(cut_names),len(cut_values)))
         if raw == []:
             raw = [1000]*len(cut_names)
+        else:
+            if len(raw) != len(cut_values):
+                raise ValueError("Cut values does not match with the raw number of events: {:.0f} != {:.0f}".format(len(raw),len(cut_values)))
         SR = SignalRegion(SR_name)
         for ix, (name, val, entries) in enumerate(zip(cut_names,cut_values,raw)):
             if ix == 0:

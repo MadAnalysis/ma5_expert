@@ -8,6 +8,7 @@ contact: jackaraz@gmail.com
 """
 from CutFlowReader import *
 from FoM import FoM
+import os
 
 
 class CutFlowTable:
@@ -66,6 +67,10 @@ class CutFlowTable:
         file = None
         if len(args) > 0:
             file = args[0]
+            file.write(r'\documentclass[11pt]{article}'+'\n'+\
+                       r'\usepackage{pdflscape}'+'\n'+\
+                       r'\begin{document}'+'\n'+\
+                       r'\begin{landscape}'+'\n\n\n\n')
         for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
@@ -97,9 +102,9 @@ class CutFlowTable:
                     name = name.replace('_',' ')
                 txt += '      '+name.ljust(40,' ') + '& '
                 if cutID == 0:
-                    txt += '{:.1f} & - &'.format(cut.Nevents)
+                    txt += '{:.1f} & - & '.format(cut.Nevents)
                 else:
-                    txt += '{:.1f} & {:.3f} &'.format(cut.Nevents,cut.rel_eff)
+                    txt += '{:.1f} & {:.3f} & '.format(cut.Nevents,cut.rel_eff)
                 
                 for sample in self.samples:
                     smp = sample[SR]
@@ -109,7 +114,7 @@ class CutFlowTable:
                         txt += '{:.1f} & {:.3f} & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff)
                     else:
                         rel_eff =1-(smp[cutID].rel_eff/cut.rel_eff)
-                        txt += '{:.1f} & {:.3f} & {:.1f}\\%'.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
+                        txt += '{:.1f} & {:.3f} & {:.1f}\\% '.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
                     if smp != self.samples[-1][SR]:
                         txt += ' & '  
                     else:
@@ -125,6 +130,8 @@ class CutFlowTable:
             txt+='\\end{table}\n'
             if file != None:
                 file.write(txt)
+                file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
+                self.WriteMake(file,make=kwargs.get('make',True))
             else:
                 print(txt)
     
@@ -267,6 +274,21 @@ class CutFlowTable:
             else:
                 print(txt)
 
+    def WriteMake(self,file,make=True):
+        if os.path.isfile(file.name):
+            make = open('Makefile','w')
+            make.write('all:\n')
+            make.write('\tpdflatex '+file.name[:4]+'\n'+\
+                       '\tpdflatex '+file.name[:4]+'\n'+\
+                       '\trm -f *.aux *.log *.out *.toc *.blg *.dvi *.t1 *.1 *.mp *spl\n'+\
+                       'clean:\n'+\
+                       '\trm -f *.aux *.log *.out *.toc *.blg *.dvi *.t1 *.1 *.mp *spl *.lol *Notes.bib\n')
+            if make:
+                try:
+                    file.close()
+                    os.system('make')
+                except:
+                    print 'Compilation failed.'
 
 
 
