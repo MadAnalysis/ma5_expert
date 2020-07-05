@@ -279,8 +279,8 @@ class CutFlowTable:
         if os.path.isfile(file.name):
             make = open('Makefile','w')
             make.write('all:\n')
-            make.write('\tpdflatex '+file.name[:4]+'\n'+\
-                       '\tpdflatex '+file.name[:4]+'\n'+\
+            make.write('\tpdflatex '+file.name[:-4]+'\n'+\
+                       '\tpdflatex '+file.name[:-4]+'\n'+\
                        '\trm -f *.aux *.log *.out *.toc *.blg *.dvi *.t1 *.1 *.mp *spl\n'+\
                        'clean:\n'+\
                        '\trm -f *.aux *.log *.out *.toc *.blg *.dvi *.t1 *.1 *.mp *spl *.lol *Notes.bib\n')
