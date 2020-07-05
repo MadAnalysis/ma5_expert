@@ -131,9 +131,10 @@ class CutFlowTable:
             if file != None:
                 file.write(txt)
                 file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
-                self.WriteMake(file,make=kwargs.get('make',True))
             else:
                 print(txt)
+        if file != None:
+            self.WriteMake(file,make=kwargs.get('make',True))
     
     def write_signal_comparison_table(self,*args,**kwargs):
         """
