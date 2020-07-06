@@ -74,7 +74,8 @@ class CutFlowTable:
             file.write(r'\documentclass[12pt]{article}'+'\n'+\
                        r'\usepackage{pdflscape,slashed}'+'\n'+\
                        r'\begin{document}'+'\n'+\
-                       r'\begin{landscape}'+'\n\n\n\n')
+                       r'\begin{landscape}'+'\n\n\n\n'+\
+                       '%%%%%% \\delta := |Ref. smp - smp_i| / ref_smp\n\n\n\n')
         for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
@@ -94,7 +95,7 @@ class CutFlowTable:
                     txt += '\\\ \\hline\\hline\n'
             txt +='      & Events & $\\varepsilon$ &'
             for smp in self.sample_names:
-                txt += 'Events & $\\varepsilon$ & $|\\delta|$ [\%]'
+                txt += 'Events & $\\varepsilon$ & $\\delta$ [\%]'
                 if not self.sample_names.index(smp) == len(self.sample_names)-1:
                     txt += ' & '
                 else:
@@ -118,7 +119,7 @@ class CutFlowTable:
                         txt += '{:.1f} & {:.3f} & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff)
                     else:
                         rel_eff =abs(1-(smp[cutID].rel_eff/cut.rel_eff))
-                        txt += '{:.1f} & {:.3f} & {:.1f}\\% '.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
+                        txt += '{:.1f} & {:.3f} & {:.1f} '.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
                     if smp != self.samples[-1][SR]:
                         txt += ' & '  
                     else:
