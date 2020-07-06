@@ -41,12 +41,19 @@ class Collection:
 
         """
         self.SR_collection_path = ''
+        xsec    = kwargs.get('xsection',-1)
+        nevents = kwargs.get('nevents', -1)
+        lumi    = kwargs.get('lumi',1.0e-3)
+        if nevents > 0:
+            xsec = nevents
+            lumi = 1e-3
+        
         if saf_file != False:
             self.saf            = SAF(saf_file=saf_file, 
-                                      xsection=kwargs.get('xsection',-1))
+                                      xsection=xsec)
             self.xsec           = self.saf.xsec
         else:
-            self.xsec = kwargs.get('xsection',-1)
+            self.xsec = xsec
         self.collection_name    = kwargs.get('ID','SR-Collection')
         self.SRdict             = {}
         self.regiondata         = {}
@@ -58,7 +65,7 @@ class Collection:
             else:
                 raise ValueError("Can't find the collection path! "+ collection_path)
         # If lumi is not given just set it to xsec [pb]
-        self.SRdict             = self.set_lumi(kwargs.get('lumi',1.0e-3))
+        self.SRdict             = self.set_lumi(lumi)
 
     @classmethod
     def __type__(self):
