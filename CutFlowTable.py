@@ -14,6 +14,8 @@ import os
 class CutFlowTable:
     def __init__(self, *args,**kwargs):
         """
+        Transforms MadAnalysis 5 CutFlows into LaTeX table.
+
         Parameters
         ----------
         *args : list of SR Collection
@@ -24,17 +26,23 @@ class CutFlowTable:
                 The index of the reference sample in the SR collection.
             sample_names : LIST
                 Names of the samples.
+            notes : STR
+                Notes to be written in the caption. Default ''
+            SR_list : LIST
+                List of the SRs to be written. Default all in the ref. input.
+
         Returns
         -------
         None.
         """
-        samples = list(args)
+        samples = [x for x in args if type(x) == Collection]
         sample_names = kwargs.get('sample_names',[])
         if len(sample_names) == len(samples):
             self.sample_names = sample_names
         else:
             self.sample_names = ['Sample '+str(x) for x in range(len(samples))]
-        
+        self.SR_list = kwargs.get('SR_list',[])
+        self.notes   = kwargs.get('notes','')
         ref_sample = kwargs.get('ref_sample',0)
         self.ref_name = self.sample_names[ref_sample]
         self.ref_sample = samples[ref_sample]
@@ -49,6 +57,8 @@ class CutFlowTable:
 
     def write_comparison_table(self,*args,**kwargs):
         """
+        Writes sample comparison table.
+
         Parameters
         ----------
         *args : FILE
@@ -60,14 +70,35 @@ class CutFlowTable:
                 collection.
             make : BOOL
                 Write the Makefile -> (default, True)
+            raw  : BOOL optional
+                Generate table with raw number of entries. Default False.
+            event_style : STR optional
+                Decimal style of the events, default '{:.1f}'
+            eff_style : STR optional
+                Decimal style of the efficiencies, default '{:.3f}'
+            ratio_style : STR optional
+                Decimal style of the ref/input ratio, default '{:.1f}'
+
         Returns
         -------
         LaTeX tables of signal regions.
         """
-        SR_list = self.ref_sample.keys()
-        if kwargs.get('only_alive',True): 
-            SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
-        SR_list.sort(key=self._sorter, reverse=True)
+        if self.SR_list == []:
+            SR_list = self.ref_sample.keys()
+            if kwargs.get('only_alive',True): 
+                SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
+            SR_list.sort(key=self._sorter, reverse=True)
+        else:
+            SR_list = self.SR_list
+
+        # Generate table with number of entries
+        raw = kwargs.get('raw',False)
+        # Get table style
+        event_style = kwargs.get('event_style','{:.1f}')
+        if raw: event_style = '{:.0f}'
+        eff_style   = kwargs.get('eff_style','{:.3f}')
+        ratio_style = kwargs.get('ratio_style','{:.1f}')
+
         file = None
         if len(args) > 0:
             file = args[0]
@@ -75,31 +106,35 @@ class CutFlowTable:
                        r'\usepackage{pdflscape,slashed}'+'\n'+\
                        r'\begin{document}'+'\n'+\
                        r'\begin{landscape}'+'\n\n\n\n'+\
-                       '%%%%%% \\delta := |Ref. smp - smp_i| / ref_smp\n\n\n\n')
+                       '%%%%%% \\delta := |Ref. smp - smp_i| / ref_smp\n\n\n')
+            for line in self.notes.split('\n'):
+                file.write('%%%% '+line+'\n')
+            file.write('\n\n\n\n')
+
         for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
             txt+='  \\renewcommand{\\arraystretch}{1.}\n'
             n_rows = len(self.samples)
-            txt+='    \\begin{tabular}{c||cc|'+'|'.join(['ccc']*(n_rows))+'}\n'
+            txt+='    \\begin{tabular}{l||cc|'+'|'.join(['ccc']*(n_rows))+'}\n'
             txt+='      & '
 
             # Write header of the table
-            txt += '\\multicolumn{2}{c|}{'+self.ref_name+'} &'
+            txt += '\\multicolumn{2}{c|}{'+self.ref_name+'} '
             for smp in self.sample_names:
-                txt += '\\multicolumn{3}{c'+(self.sample_names.index(smp) != len(self.sample_names)-1)*'|'+'}{'+smp+'} '
-                if not self.sample_names.index(smp) == len(self.sample_names)-1:
-                    txt += '&'
-                else:
-                    txt += '\\\ \\hline\\hline\n'
-            txt +='      & Events & $\\varepsilon$ &'
+                txt += '& \\multicolumn{3}{c'+(self.sample_names.index(smp) != len(self.sample_names)-1)*'|'+'}{'+smp+'} '
+                # if not self.sample_names.index(smp) == len(self.sample_names)-1:
+                #     txt += '&'
+                # else:
+            txt += '\\\ \\hline\\hline\n'
+            txt +='      & '+(not raw)*'Events'+(raw)*'Entries'+' & $\\varepsilon$'
             for smp in self.sample_names:
-                txt += 'Events & $\\varepsilon$ & $\\delta$ [\%]'
-                if not self.sample_names.index(smp) == len(self.sample_names)-1:
-                    txt += ' & '
-                else:
-                    txt += '\\\ \\hline\n'
+                txt += ' & '+(not raw)*'Events'+(raw)*'Entries'+' & $\\varepsilon$ & $\\delta$ [\%]'
+                # if not self.sample_names.index(smp) == len(self.sample_names)-1:
+                #     txt += ' & '
+                # else:
+            txt += '\\\ \\hline\n'
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
                 name = cut.Name
@@ -107,30 +142,52 @@ class CutFlowTable:
                     name = name.replace('_',' ')
                 txt += '      '+name.ljust(40,' ') + '& '
                 if cutID == 0:
-                    txt += '{:.1f} & - & '.format(cut.Nevents)
+                    tmp = event_style+' & - '
+                    if raw:
+                        txt += tmp.format(cut.Nentries)
+                    else:
+                        txt += tmp.format(cut.Nevents)
                 else:
-                    txt += '{:.1f} & {:.3f} & '.format(cut.Nevents,cut.rel_eff)
-                
+                    tmp = event_style+' & '+eff_style
+                    if raw:
+                        txt += tmp.format(cut.Nentries,cut.raw_rel_eff)
+                    else:
+                        txt += tmp.format(cut.Nevents,cut.rel_eff)
+
                 for sample in self.samples:
                     smp = sample[SR]
                     if cutID == 0:
-                        txt += '{:.1f} & - & - '.format(smp[cutID].Nevents)
+                        tmp = ' & '+event_style+' & - & - '
+                        if raw:
+                            txt += tmp.format(smp[cutID].Nentries)
+                        else:
+                            txt += tmp.format(smp[cutID].Nevents)
                     elif cutID > 0 and cut.rel_eff == 0:
-                        txt += '{:.1f} & {:.3f} & - '.format(smp[cutID].Nevents,smp[cutID].rel_eff)
+                        tmp = ' & '+event_style+' & '+eff_style+' & - '
+                        if raw:
+                            txt += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff)
+                        else:
+                            txt += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff)
                     else:
-                        rel_eff =abs(1-(smp[cutID].rel_eff/cut.rel_eff))
-                        txt += '{:.1f} & {:.3f} & {:.1f} '.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
-                    if smp != self.samples[-1][SR]:
-                        txt += ' & '  
-                    else:
-                        txt += r'\\'
+                        tmp = ' & '+event_style+' & '+eff_style+' & '+ratio_style+' '
+                        if raw:
+                            rel_eff =abs(1-(smp[cutID].raw_rel_eff/cut.raw_rel_eff))
+                            txt  += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff,rel_eff*100.)
+                        else:
+                            rel_eff =abs(1-(smp[cutID].rel_eff/cut.rel_eff))
+                            txt  += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
+                    # if smp != self.samples[-1][SR]:
+                    #     txt += ' & '  
+                    # else:
+                txt += r'\\'
                 txt += '\n'
             entries = [x.Nentries for x in [self.ref_sample[SR].get_final_cut()]+\
                                            [sample[SR].get_final_cut() for sample in self.samples]]
             txt+='    \\end{tabular}\n'
             txt+='    \\caption{'+SR.replace('_',' ')+\
-            (any([x<100 for x in entries]))*(' (This SR needs more event:: MC event count = '+\
-                                             ', '.join([str(x) for x in entries])+')')+'}\n'
+            (any([x<100 for x in entries]))*(' (This region might need more event $\\to$ MC event count = '+\
+                                             ', '.join([(x<1e99)*str(x)+(x==1e99)*' - ' for x in entries])+') ')+\
+                 (self.notes != '')*self.notes+'}\n'
             txt+='  \\end{center}\n'
             txt+='\\end{table}\n'
             if file != None:
@@ -145,6 +202,7 @@ class CutFlowTable:
 
     def write_signal_comparison_table(self,*args,**kwargs):
         """
+        Writes Signal vs Bkg comparison table.
 
         Parameters
         ----------
@@ -163,6 +221,7 @@ class CutFlowTable:
                 Calculate Assimov significance -> (default False)
             make : BOOL
                 Write the Makefile -> (default, True)
+
         Returns
         -------
         Signal over Background comparison table.
@@ -180,13 +239,18 @@ class CutFlowTable:
                        r'\usepackage{pdflscape,slashed}'+'\n'+\
                        r'\begin{document}'+'\n'+\
                        r'\begin{landscape}'+'\n\n\n\n')
+            if kwargs.get('ZA',False):
+                file.write(r'%%%    Z_A=\sqrt{ 2\left('+'\n')
+                file.write(r'%%%    (S+B)\ln\left[\frac{(S+B)(S+\sigma^2_B)}{B^2+(S+B)\sigma^2_B}\right] -'+'\n')
+                file.write(r'%%%    \frac{B^2}{\sigma^2_B}\ln\left[1+\frac{\sigma^2_BS}{B(B+\sigma^2_B)}\right]'+'\n')
+                file.write(r'%%%    \right)}'+'\n\n\n\n\n\n')
         for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
             txt+='  \\renewcommand{\\arraystretch}{1.}\n'
             n_rows = len(self.samples)
-            txt+='    \\begin{tabular}{c||cc|'+'|'.join(['cc']*(n_rows))+'}\n'
+            txt+='    \\begin{tabular}{l||cc|'+'|'.join(['cc']*(n_rows))+'}\n'
             txt+='      & '
 
             # Write header of the table
@@ -300,6 +364,26 @@ class CutFlowTable:
 
 
     def WriteMake(self,file,make=True):
+        """
+        Writes make file for given tex file.
+
+        Parameters
+        ----------
+        file : FILE
+            TeX file to write the Makefile for.
+        make : BOOL, optional
+            Compile or not. The default is True.
+
+        Raises
+        ------
+        ValueError
+            Can not find the file.
+
+        Returns
+        -------
+        None.
+
+        """
         if not file.name.endswith('.tex'):
             raise ValueError('Input does not have .tex extention.')
         if os.path.isfile(file.name):

@@ -41,31 +41,41 @@ class Cut(object):
             self.sumw2    = sumw2
             if cut_0 == None:
                 self.eff      = 1.
+                self.raw_eff  = 1.
             else:
                 self.eff      = round(sumw/cut_0.sumw,8)
+                self.raw_eff  = round(float(Nentries)/float(cut_0.Nentries),8)
             if precut == None:
-                self.rel_eff  = 1.
+                self.rel_eff     = 1.
+                self.raw_rel_eff = 1.
             else:
                 if precut.sumw == 0.:
-                    self.rel_eff = 1.
+                    self.rel_eff     = 1.
+                    self.raw_rel_eff = 1.
                 else:
-                    self.rel_eff  = round(sumw/precut.sumw,8)
+                    self.rel_eff     = round(sumw/precut.sumw,8)
+                    self.raw_rel_eff = round(float(Nentries)/float(precut.Nentries),8)
             self.nevt    = round(self.eff*xsec,8)
             self.Nevents = round(self.eff*xsec,8)
         else:
             self.nevt    = float(xsec)
             self.Nevents = float(xsec)
             if cut_0 == None:
-                self.eff      = 1.
+                self.eff     = 1.
+                self.raw_eff = 1.
             else:
-                self.eff      = round(xsec/cut_0.Nevents,8)
+                self.eff     = round(xsec/cut_0.Nevents,8)
+                self.raw_eff = round(float(Nentries)/float(cut_0.Nentries),8)
             if precut == None:
-                self.rel_eff  = 1.
+                self.rel_eff     = 1.
+                self.raw_rel_eff = 1.
             else:
                 if precut.Nevents == 0.:
-                    self.rel_eff = 1.
+                    self.rel_eff     = 1.
+                    self.raw_rel_eff = 1.
                 else:
-                    self.rel_eff  = round(xsec/precut.Nevents,8)
+                    self.rel_eff     = round(xsec/precut.Nevents,8)
+                    self.raw_rel_eff = round(float(Nentries)/float(precut.Nentries),8)
 
     @classmethod
     def __type__(self):

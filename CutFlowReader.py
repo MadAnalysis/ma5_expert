@@ -12,7 +12,7 @@ from SafReader import SAF
 from CutFlowObjects import Cut, SignalRegion
 
 
-class Collection:
+class Collection(object):
     def __init__(self, collection_path='', saf_file=False, **kwargs):
         """
 
@@ -84,7 +84,7 @@ class Collection:
         if len(cut_names) != len(cut_values):
             raise ValueError("Cut names does not match with the values: {:.0f} != {:.0f}".format(len(cut_names),len(cut_values)))
         if raw == []:
-            raw = [1000]*len(cut_names)
+            raw = [1e99]*len(cut_names)
         else:
             if len(raw) != len(cut_values):
                 raise ValueError("Cut values does not match with the raw number of events: {:.0f} != {:.0f}".format(len(raw),len(cut_values)))
