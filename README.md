@@ -1,11 +1,13 @@
 # MadAnalysis 5 Interpreter For Expert Mode
  MA5 analysis output interpreter for expert mode. Parse the signal collection and construct cutflow (histogram interpreter coming soon). 
 
-# How to get LaTeX output of the cutflow:
+## Cutflow Collection
 
-```CutFlowReader``` Collects the signal regions under the main CutFlow path and constructs a collection of signal regions. Sample information folder can be inputted to parse cross section value, or it can be overwritten entirely. ```CutFlowTable``` generates two types of cutflow table;
-  * Signal vs Background comparison table: The reference sample will be treated as background, and several different statistical variables are calculated with respect to the background. Other samples will be treated as individual signal samples.
-  * Sample comparison table: Each sample is compared to the reference sample with respect to their relative cut efficiencies.
+ * Parse all the signal regions and construct an object-base, interactable cutflow.
+ * Write combined LaTeX tables for different samples.
+ * Compare samples and construct validation tables which allows you to calculate difference of the relative efficiencies for each given sample with respect to a reference sample.
+ * Compare signal and background samples and calculate figure of merit.
+ * Posibility to include experimentaly available cutflow data and compare it against MadAnalysis 5 cutflow output.
 
 Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/examples).
 
@@ -35,3 +37,5 @@ Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 - [ ] Overall Ma5 Analysis parser
 
 - [ ] Some experimental analysis requires MC event comparison table. This needs to be added.
+
+- [ ] Combine collections with + operator and normalize to a certain luminosity with * operator.
