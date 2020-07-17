@@ -36,6 +36,6 @@ Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 
 - [ ] Overall Ma5 Analysis parser
 
-- [ ] Some experimental analysis requires MC event comparison table. This needs to be added.
+- [x] Some experimental analysis requires MC event comparison table. This needs to be added.
 
-- [ ] Combine collections with + operator and normalize to a certain luminosity with * operator.
+- [x] Combine collections with + operator and normalize to a certain luminosity with * operator.

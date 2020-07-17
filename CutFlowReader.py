@@ -65,7 +65,7 @@ class Collection(object):
             else:
                 raise ValueError("Can't find the collection path! "+ collection_path)
         # If lumi is not given just set it to xsec [pb]
-        self.SRdict             = self.set_lumi(lumi)
+        if lumi > 1e-3: self * lumi
 
     @classmethod
     def __type__(self):
@@ -93,23 +93,21 @@ class Collection(object):
         SR = SignalRegion(SR_name)
         for ix, (name, val, entries) in enumerate(zip(cut_names,cut_values,raw)):
             if ix == 0:
-                current_cut = Cut(Name=name, xsec=val, Nentries=entries)
+                current_cut = Cut(Name=name, Nevents=val, Nentries=entries)
                 cut_0       = current_cut
                 precut      = current_cut
             else:
-                current_cut = Cut(Name=name, precut=precut,cut_0=cut_0, xsec=val, Nentries=entries)
+                current_cut = Cut(Name=name, precut=precut,cut_0=cut_0, Nevents=val, Nentries=entries)
                 precut      = current_cut
             SR.add_cut(current_cut)
         self.SRdict[SR_name] = SR
 
 
-    def Print(self,*args):
-        for key, item in self.items():
-            if len(args) > 0:
-                if key not in list(args):
-                    continue
-            print('Signal Region : ', key)
-            item.Print()
+    def __str__(self):
+        txt = ''
+        for ix, (key, item) in enumerate(self.SRdict.items()):
+            txt += (ix!=0)*'\n\n\n'+'   * Signal Region : '+key+'\n'+str(item)
+        return txt
 
     def get_alive(self):
         temp = {}
@@ -119,15 +117,15 @@ class Collection(object):
             else:
                 pass
         self.SRdict = temp
-    
-    def set_lumi(self,lumi):
+
+    def __mul__(self,lumi):
         if lumi <= 0:
             return self.SRdict
         new_SRdict = {}
         for key, item in self.SRdict.items():
-            new_SRdict[key] = item.set_lumi(lumi)
-        return new_SRdict
-    
+            new_SRdict[key] = item * lumi
+        self.SRdict = new_SRdict
+
     def readCollection(self):
         if not os.path.isdir(self.collection_path):
             return False
@@ -142,7 +140,7 @@ class Collection(object):
             while i < len(cutflow):
                 if cutflow[i].startswith('<InitialCounter>'):
                     i+=2
-                    current_cut = Cut(Name='Presel.',
+                    current_cut = Cut(Name='Initial',
                                       Nentries=int(cutflow[i].split()[0])+\
                                                int(cutflow[i].split()[1]),
                                       sumw=float(cutflow[i+1].split()[0])+\
@@ -170,3 +168,94 @@ class Collection(object):
                 i+=1
             self.SRdict[currentSR.name] = currentSR
             self.regiondata[currentSR.name] = currentSR.regiondata()
+
+
+    def __add__(self,coll):
+        if type(coll) != Collection:
+            raise ValueError("Only two collection type can be added")
+
+        new_collection = Collection()
+        new_dict       = {}
+        new_regiondata = {}
+        for SR, cutflow in self.items():
+            if SR not in coll.keys():
+                continue
+            coll_cutflow = coll[SR]
+
+            currentSR = SignalRegion(SR)
+            for cutID, cut in cutflow.items():
+                if cutID == 0:
+                    current_cut = Cut(Name="Initial",
+                                      Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
+                                      sumw     = cut.sumw + coll_cutflow[cutID].sumw,
+                                      Nevents  = cut.nevt + coll_cutflow[cutID].nevt)
+                    currentSR.add_cut(current_cut)
+                    cut_0 = current_cut
+                    precut = current_cut
+                else:
+                    current_cut = Cut(Name=cut.Name,
+                                      Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
+                                      sumw     = cut.sumw + coll_cutflow[cutID].sumw,
+                                      Nevents  = cut.nevt + coll_cutflow[cutID].nevt,
+                                      precut   = precut,
+                                      cut_0    = cut_0)
+                    currentSR.add_cut(current_cut)
+                    precut = current_cut
+            new_dict[SR]       = currentSR
+            new_regiondata[SR] = currentSR.regiondata()
+
+        new_collection.collection_name = 'Total'
+        new_collection.SRdict          = new_dict
+        new_collection.regiondata      = new_regiondata
+        return new_collection
+        #     Names        = []
+        #     Nentries     = []
+        #     Nevents      = []
+        #     for cutID, cut in cutflow.items():
+        #         Names.append(cut.Name)
+        #         Nentries.append(cut.Nentries + coll_cutflow[cutID].Nentries)
+        #         Nevents.append(cut.nevt + coll_cutflow[cutID].nevt)
+        #     new_collection.add_SR(SR,Names,Nevents,raw=Nentries)
+        # return new_collection
+
+        #     currentSR = SignalRegion(SR)
+        #     for cutID, cut in cutflow.items():
+        #         if cutID == 0:
+        #             current_cut = Cut(Name="Initial",
+        #                               Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
+        #                               sumw     = cut.sumw + coll_cutflow[cutID].sumw,
+        #                               Nevents  = cut.nevt + coll_cutflow[cutID].nevt)
+        #             currentSR.add_cut(current_cut)
+        #             cut_0 = current_cut
+        #             precut = current_cut
+
+        #         else:
+        #             current_cut = Cut(Name=cut.Name,
+        #                               Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
+        #                               sumw     = cut.sumw + coll_cutflow[cutID].sumw,
+        #                               Nevents  = cut.nevt + coll_cutflow[cutID].nevt,
+        #                               precut   = precut,
+        #                               cut_0    = cut_0)
+        #             currentSR.add_cut(current_cut)
+        #             precut = current_cut
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -8,7 +8,7 @@ Created on Fri Jan 31 10:37:07 2020
 """
 
 class Cut(object):
-    def __init__(self,Name=-1,Nentries=-1,sumw=-1,sumw2=-1, precut=None,cut_0=None, xsec=1.):
+    def __init__(self,Name=-1,Nentries=-1,sumw=-1,sumw2=-1, precut=None,cut_0=None, xsec=1.,Nevents=None):
         """
 
         Parameters
@@ -35,78 +35,85 @@ class Cut(object):
         """
         self.Name        = str(Name)
         self.Nentries    = Nentries
-        self.sumw        = -1
-        self.sumw2       = -1
-        self.eff         = -1
-        self.raw_eff     = -1
-        self.rel_eff     = -1
-        self.raw_rel_eff = -1
-        self.nevt        = -1
-        self.Nevents     = -1
-        if sumw >= 0:
-            self.sumw     = sumw
-            self.sumw2    = sumw2
+        self.sumw        = sumw
+        self.sumw2       = sumw2
+
+        if Nevents == None:
             if cut_0 == None:
-                self.eff      = 1.
-                self.raw_eff  = 1.
+                self.eff         = 1.
+                self.raw_eff     = 1.
             else:
-                self.eff      = round(sumw/cut_0.sumw,8)
-                self.raw_eff  = round(float(Nentries)/float(cut_0.Nentries),8)
+                if cut_0.sumw > 0 and cut_0.Nentries > 0:
+                    self.eff         = round(sumw/cut_0.sumw,8)
+                    self.raw_eff     = round(float(Nentries)/float(cut_0.Nentries),8)
+                else:
+                    self.eff         = 1.
+                    self.raw_eff     = 1.
             if precut == None:
                 self.rel_eff     = 1.
                 self.raw_rel_eff = 1.
             else:
-                if precut.sumw == 0.:
-                    self.rel_eff     = 1.
-                    self.raw_rel_eff = 1.
-                else:
+                if precut.sumw > 0 and precut.Nentries>0:
                     self.rel_eff     = round(sumw/precut.sumw,8)
                     self.raw_rel_eff = round(float(Nentries)/float(precut.Nentries),8)
-            self.nevt    = round(self.eff*xsec,8)
-            self.Nevents = round(self.eff*xsec,8)
+                else:
+                    self.rel_eff     = 1.
+                    self.raw_rel_eff = 1.
+            self.nevt        = round(self.eff*xsec,8)
+            self.Nevents     = round(self.eff*xsec,8)
         else:
-            self.sumw     = sumw
-            self.sumw2    = sumw2
-            self.nevt    = float(xsec)
-            self.Nevents = float(xsec)
+            self.nevt        = round(Nevents, 8)
+            self.Nevents     = self.nevt
             if cut_0 == None:
-                self.eff     = 1.
-                self.raw_eff = 1.
+                self.eff         = 1.
+                self.raw_eff     = 1.
             else:
-                self.eff     = round(xsec/cut_0.Nevents,8)
-                self.raw_eff = round(float(Nentries)/float(cut_0.Nentries),8)
+                if cut_0.sumw > 0:
+                    self.eff         = round(sumw/cut_0.sumw,8)
+                elif cut_0.sumw == -1:
+                    self.eff         = round(Nevents/cut_0.Nevents,8)
+                else:
+                    self.eff         = 1.
+                if cut_0.Nentries > 0:
+                    self.raw_eff     = round(float(Nentries)/float(cut_0.Nentries),8)
+                else:
+                    self.raw_eff     = 1.
             if precut == None:
                 self.rel_eff     = 1.
                 self.raw_rel_eff = 1.
             else:
-                if precut.Nevents == 0.:
-                    self.rel_eff     = 1.
-                    self.raw_rel_eff = 1.
+                if precut.sumw > 0:
+                    self.rel_eff     = round(sumw/precut.sumw,8)
+                elif precut.sumw == -1:
+                    self.rel_eff      = round(Nevents/precut.Nevents,8)
                 else:
-                    self.rel_eff     = round(xsec/precut.Nevents,8)
+                    self.rel_eff     = 1.
+                if precut.Nentries>0:
                     self.raw_rel_eff = round(float(Nentries)/float(precut.Nentries),8)
+                else:
+                    self.raw_rel_eff = 1.
+            if self.Nevents < 0.:
+                self.nevt        = 0.
+                self.Nevents     = 0.
 
-    @classmethod
-    def __type__(self):
-        return __name__
 
-    def set_lumi(self,lumi):
+    def __mul__(self,lumi):
+        # in ifb
         self.Nevents *= 1000.*lumi
+        self.nevt     = self.Nevents
         return self
     
     def set_xsec(self,xsec):
         self.nevt    = round(self.eff*xsec, 8)
-        self.Nevents = round(self.eff*xsec, 8)
+        self.Nevents = self.nevt
         return self
     
-    def Print(self):
-        print('============')
-        print(self.Name)
-        print('Nentries: {:.0f}'.format(self.Nentries))
-        print('Nevents : {:.3f}'.format(self.Nevents))
-        print('Cut Eff : {:.5f}'.format(self.eff))
-        print('Rel Eff : {:.5f}'.format(self.rel_eff))
-        
+    def __str__(self):
+        return  '   '+self.Name+'\n'+\
+                '   Nentries: {:.0f}\n   Nevents : {:.3f}\n'.format(self.Nentries,self.Nevents)+\
+                '   Cut Eff : {:.5f}\n   Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
+
+
 
 class SignalRegion(object):
     def __init__(self,name):
@@ -144,18 +151,17 @@ class SignalRegion(object):
     def isAlive(self):
         return self.get_final_cut().Nentries > 0
 
-    def set_lumi(self,lumi):
-        self.cutlist = [cut.set_lumi(lumi) for cut in self.cutlist]
+    def __mul__(self,lumi):
+        self.cutlist = [cut * lumi for cut in self.cutlist]
         return self
 
     def set_xsec(self,xsec):
         self.cutlist = [cut.set_xsec(xsec) for cut in self.cutlist]
         return self
-    
+
     def regiondata(self):
         return {self.name : {'Nf' : self.get_final_cut().sumw,
                              'N0' : self.get_cut(0).sumw}}
 
-    def Print(self):
-        for cut in self.cutlist:
-            cut.Print()
+    def __str__(self):
+        return '\n'.join(['   '+str(i)+'. '+str(self.cutlist[i]) for i in range(len(self.cutlist))])
