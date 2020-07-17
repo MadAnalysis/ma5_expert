@@ -33,9 +33,16 @@ class Cut(object):
         None.
 
         """
-        self.Name     = str(Name)
-        self.Nentries = Nentries
-        self.type     = 'Cut'
+        self.Name        = str(Name)
+        self.Nentries    = Nentries
+        self.sumw        = -1
+        self.sumw2       = -1
+        self.eff         = -1
+        self.raw_eff     = -1
+        self.rel_eff     = -1
+        self.raw_rel_eff = -1
+        self.nevt        = -1
+        self.Nevents     = -1
         if sumw >= 0:
             self.sumw     = sumw
             self.sumw2    = sumw2
@@ -58,6 +65,8 @@ class Cut(object):
             self.nevt    = round(self.eff*xsec,8)
             self.Nevents = round(self.eff*xsec,8)
         else:
+            self.sumw     = sumw
+            self.sumw2    = sumw2
             self.nevt    = float(xsec)
             self.Nevents = float(xsec)
             if cut_0 == None:
