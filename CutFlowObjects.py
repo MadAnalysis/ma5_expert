@@ -8,7 +8,7 @@ Created on Fri Jan 31 10:37:07 2020
 """
 
 class Cut(object):
-    def __init__(self,Name=-1,Nentries=-1,sumw=-1,sumw2=-1, precut=None,cut_0=None, xsec=1.,Nevents=None):
+    def __init__(self,Name='NaN',Nentries=-1,sumw=None,sumw2=-1, precut=None,cut_0=None, xsec=1.,Nevents=None):
         """
 
         Parameters
@@ -70,7 +70,7 @@ class Cut(object):
             else:
                 if cut_0.sumw > 0:
                     self.eff         = round(sumw/cut_0.sumw,8)
-                elif cut_0.sumw == -1:
+                elif cut_0.sumw == None:
                     self.eff         = round(Nevents/cut_0.Nevents,8)
                 else:
                     self.eff         = 1.
@@ -84,7 +84,7 @@ class Cut(object):
             else:
                 if precut.sumw > 0:
                     self.rel_eff     = round(sumw/precut.sumw,8)
-                elif precut.sumw == -1:
+                elif precut.sumw == None:
                     self.rel_eff      = round(Nevents/precut.Nevents,8)
                 else:
                     self.rel_eff     = 1.
@@ -110,8 +110,8 @@ class Cut(object):
     
     def __str__(self):
         return  '   '+self.Name+'\n'+\
-                '   Nentries: {:.0f}\n   Nevents : {:.3f}\n'.format(self.Nentries,self.Nevents)+\
-                '   Cut Eff : {:.5f}\n   Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
+                '      Nentries: {:.0f}\n      Nevents : {:.3f}\n'.format(self.Nentries,self.Nevents)+\
+                '      Cut Eff : {:.5f}\n      Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
 
 
 

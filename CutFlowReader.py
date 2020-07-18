@@ -67,10 +67,6 @@ class Collection(object):
         # If lumi is not given just set it to xsec [pb]
         if lumi > 1e-3: self * lumi
 
-    @classmethod
-    def __type__(self):
-        return __name__
-
     def __getitem__(self,name):
         return self.SRdict[name]
     
@@ -177,67 +173,54 @@ class Collection(object):
         new_collection = Collection()
         new_dict       = {}
         new_regiondata = {}
+        ma5_input = True
         for SR, cutflow in self.items():
             if SR not in coll.keys():
                 continue
             coll_cutflow = coll[SR]
 
+            Names        = []
+            Nentries     = []
+            Nevents      = []
+
             currentSR = SignalRegion(SR)
             for cutID, cut in cutflow.items():
-                if cutID == 0:
-                    current_cut = Cut(Name="Initial",
-                                      Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
-                                      sumw     = cut.sumw + coll_cutflow[cutID].sumw,
-                                      Nevents  = cut.nevt + coll_cutflow[cutID].nevt)
-                    currentSR.add_cut(current_cut)
-                    cut_0 = current_cut
-                    precut = current_cut
+                if cut.sumw != None and coll_cutflow[cutID].sumw != None and ma5_input:
+                    if cutID == 0:
+                        current_cut = Cut(Name="Initial",
+                                          Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
+                                          sumw     = cut.sumw + coll_cutflow[cutID].sumw,
+                                          Nevents  = cut.nevt + coll_cutflow[cutID].nevt)
+                        currentSR.add_cut(current_cut)
+                        cut_0 = current_cut
+                        precut = current_cut
+                    else:
+                        current_cut = Cut(Name=cut.Name,
+                                          Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
+                                          sumw     = cut.sumw + coll_cutflow[cutID].sumw,
+                                          Nevents  = cut.nevt + coll_cutflow[cutID].nevt,
+                                          precut   = precut,
+                                          cut_0    = cut_0)
+                        currentSR.add_cut(current_cut)
+                        precut = current_cut
                 else:
-                    current_cut = Cut(Name=cut.Name,
-                                      Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
-                                      sumw     = cut.sumw + coll_cutflow[cutID].sumw,
-                                      Nevents  = cut.nevt + coll_cutflow[cutID].nevt,
-                                      precut   = precut,
-                                      cut_0    = cut_0)
-                    currentSR.add_cut(current_cut)
-                    precut = current_cut
-            new_dict[SR]       = currentSR
-            new_regiondata[SR] = currentSR.regiondata()
+                    ma5_input = False
+                    Names.append(cut.Name)
+                    Nentries.append(cut.Nentries + coll_cutflow[cutID].Nentries)
+                    Nevents.append(cut.nevt + coll_cutflow[cutID].nevt)
 
-        new_collection.collection_name = 'Total'
-        new_collection.SRdict          = new_dict
-        new_collection.regiondata      = new_regiondata
+            if ma5_input:
+                new_dict[SR]       = currentSR
+                new_regiondata[SR] = currentSR.regiondata()
+            else:
+                new_collection.add_SR(SR,Names,Nevents,raw=Nentries)
+
+        new_collection.collection_name = 'Combined'
+        if ma5_input:
+            new_collection.SRdict          = new_dict
+            new_collection.regiondata      = new_regiondata
         return new_collection
-        #     Names        = []
-        #     Nentries     = []
-        #     Nevents      = []
-        #     for cutID, cut in cutflow.items():
-        #         Names.append(cut.Name)
-        #         Nentries.append(cut.Nentries + coll_cutflow[cutID].Nentries)
-        #         Nevents.append(cut.nevt + coll_cutflow[cutID].nevt)
-        #     new_collection.add_SR(SR,Names,Nevents,raw=Nentries)
-        # return new_collection
 
-        #     currentSR = SignalRegion(SR)
-        #     for cutID, cut in cutflow.items():
-        #         if cutID == 0:
-        #             current_cut = Cut(Name="Initial",
-        #                               Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
-        #                               sumw     = cut.sumw + coll_cutflow[cutID].sumw,
-        #                               Nevents  = cut.nevt + coll_cutflow[cutID].nevt)
-        #             currentSR.add_cut(current_cut)
-        #             cut_0 = current_cut
-        #             precut = current_cut
-
-        #         else:
-        #             current_cut = Cut(Name=cut.Name,
-        #                               Nentries = cut.Nentries + coll_cutflow[cutID].Nentries,
-        #                               sumw     = cut.sumw + coll_cutflow[cutID].sumw,
-        #                               Nevents  = cut.nevt + coll_cutflow[cutID].nevt,
-        #                               precut   = precut,
-        #                               cut_0    = cut_0)
-        #             currentSR.add_cut(current_cut)
-        #             precut = current_cut
 
 
 
