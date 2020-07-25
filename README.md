@@ -13,11 +13,11 @@
 Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/examples).
 
 Simple cutflow:
-```
-In [1] = from ma5_expert.CutFlowReader import Collection
-In [2] = Vec = Collection(collection_path='DMsimp_recast/Output/SAF/vec/sfs_atlas_conf_2019_040_0/Cutflows',
+```python
+from ma5_expert.CutFlowReader import Collection
+Vec = Collection(collection_path='DMsimp_recast/Output/SAF/vec/sfs_atlas_conf_2019_040_0/Cutflows',
                  xsection=7.8e-02, lumi = 139.)
-In [3] = print Vec
+print Vec
 #Output:
    * Signal Region : SR6j_1000
    0.    Initial
@@ -35,6 +35,11 @@ In [3] = print Vec
       Nevents : 2979.391 ± 16.178
       Cut Eff : 0.27480
       Rel Eff : 1.00000
+   3.    njets>=6
+      Nentries: 240
+      Nevents : 24.207 ± 1.561
+      Cut Eff : 0.00223
+      Rel Eff : 0.00812
 ...
 ```
 
