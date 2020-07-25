@@ -78,6 +78,8 @@ class CutFlowTable:
                 Decimal style of the efficiencies, default '{:.3f}'
             ratio_style : STR optional
                 Decimal style of the ref/input ratio, default '{:.1f}'
+            mcunc : BOOL
+                Monte Carlo uncertainty of the cut efficiency. Default False.
 
         Returns
         -------
@@ -98,6 +100,7 @@ class CutFlowTable:
         if raw: event_style = '{:.0f}'
         eff_style   = kwargs.get('eff_style','{:.3f}')
         ratio_style = kwargs.get('ratio_style','{:.1f}')
+        MCunc       = kwargs.get('mcunc',False)
 
         file = None
         if len(args) > 0:
@@ -148,11 +151,14 @@ class CutFlowTable:
                     else:
                         txt += tmp.format(cut.Nevents)
                 else:
-                    tmp = event_style+' & '+eff_style
+                    tmp = event_style+(MCunc and cut.Nentries>0)*(' \pm '+event_style)+' & '+eff_style
                     if raw:
                         txt += tmp.format(cut.Nentries,cut.raw_rel_eff)
                     else:
-                        txt += tmp.format(cut.Nevents,cut.rel_eff)
+                        if not (MCunc and cut.Nentries>0):
+                            txt += tmp.format(cut.Nevents,cut.rel_eff)
+                        else:
+                            txt += tmp.format(cut.Nevents,cut.MCunc,cut.rel_eff)
 
                 for sample in self.samples:
                     smp = sample[SR]
@@ -163,19 +169,27 @@ class CutFlowTable:
                         else:
                             txt += tmp.format(smp[cutID].Nevents)
                     elif cutID > 0 and cut.rel_eff == 0:
-                        tmp = ' & '+event_style+' & '+eff_style+' & - '
+                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' \pm '+event_style)+\
+                              ' & '+eff_style+' & - '
                         if raw:
                             txt += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff)
                         else:
-                            txt += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff)
+                            if not (MCunc and smp[cutID].Nentries>0):
+                                txt += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff)
+                            else:
+                                txt += tmp.format(smp[cutID].Nevents,smp[cutID].MCunc,smp[cutID].rel_eff)
                     else:
-                        tmp = ' & '+event_style+' & '+eff_style+' & '+ratio_style+' '
+                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' \pm '+event_style)+\
+                              ' & '+eff_style+' & '+ratio_style+' '
                         if raw:
                             rel_eff =abs(1-(smp[cutID].raw_rel_eff/cut.raw_rel_eff))
                             txt  += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff,rel_eff*100.)
                         else:
                             rel_eff =abs(1-(smp[cutID].rel_eff/cut.rel_eff))
-                            txt  += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
+                            if not (MCunc and smp[cutID].Nentries>0):
+                                txt  += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
+                            else:
+                                txt += tmp.format(smp[cutID].Nevents,smp[cutID].MCunc,smp[cutID].rel_eff,rel_eff*100.)
                     # if smp != self.samples[-1][SR]:
                     #     txt += ' & '  
                     # else:

@@ -5,11 +5,38 @@
 
  * Parse all the signal regions and construct an object-base, interactable cutflow.
  * Write combined LaTeX tables for different samples.
- * Compare samples and construct validation tables which allows you to calculate difference of the relative efficiencies for each given sample with respect to a reference sample.
- * Compare signal and background samples and calculate figure of merit.
- * Posibility to include experimentaly available cutflow data and compare it against MadAnalysis 5 cutflow output.
-
+ * Compare samples and construct validation tables which allow you to calculate the difference of the relative efficiencies for each given sample with respect to a reference sample.
+ * Compare signal and background samples and calculate the figure of merit.
+ * Possibility to include experimentally available cutflow data and compare it against MadAnalysis 5 cutflow output.
+ * Calculate Monte Carlo uncertainty per cut on the fly
+ 
 Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/examples).
+
+Simple cutflow:
+```
+In [1] = from ma5_expert.CutFlowReader import Collection
+In [2] = Vec = Collection(collection_path='DMsimp_recast/Output/SAF/vec/sfs_atlas_conf_2019_040_0/Cutflows',
+                 xsection=7.8e-02, lumi = 139.)
+In [3] = print Vec
+#Output:
+   * Signal Region : SR6j_1000
+   0.    Initial
+      Nentries: 200000
+      Nevents : 10842.000
+      Cut Eff : 1.00000
+      Rel Eff : 1.00000
+   1.    Preselection
+      Nentries: 24595
+      Nevents : 2979.391 ± 16.178
+      Cut Eff : 0.27480
+      Rel Eff : 0.27480
+   2.    njets>=2
+      Nentries: 24595
+      Nevents : 2979.391 ± 16.178
+      Cut Eff : 0.27480
+      Rel Eff : 1.00000
+...
+```
 
 ## Citation 
 Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
@@ -39,3 +66,7 @@ Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 - [x] Some experimental analysis requires MC event comparison table. This needs to be added.
 
 - [x] Combine collections with + operator and normalize to a certain luminosity with * operator.
+
+- [x] Add MC uncertainties
+
+- [ ] Add theoretical uncertainties

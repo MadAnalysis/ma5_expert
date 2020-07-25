@@ -6,6 +6,7 @@ Created on Fri Jan 31 10:37:07 2020
 @author  : jackaraz
 @contact : Jack Y. Araz <jackaraz@gmail.com>
 """
+from math import sqrt
 
 class Cut(object):
     def __init__(self,Name='NaN',Nentries=-1,sumw=None,sumw2=-1, precut=None,cut_0=None, xsec=1.,Nevents=None):
@@ -95,23 +96,39 @@ class Cut(object):
             if self.Nevents < 0.:
                 self.nevt        = 0.
                 self.Nevents     = 0.
-
+        if Nentries > 0:
+            self.MCunc = self.Nevents*sqrt((1.-self.eff)/float(self.Nentries))
+        else:
+            self.MCunc = 0.
 
     def __mul__(self,lumi):
         # in ifb
         self.Nevents *= 1000.*lumi
         self.nevt     = self.Nevents
+        if self.Nentries > 0:
+            self.MCunc = self.Nevents*sqrt((1.-self.eff)/float(self.Nentries))
+        else:
+            self.MCunc = 0.
         return self
     
     def set_xsec(self,xsec):
         self.nevt    = round(self.eff*xsec, 8)
         self.Nevents = self.nevt
+        if self.Nentries > 0:
+            self.MCunc = self.Nevents*sqrt((1.-self.eff)/float(self.Nentries))
+        else:
+            self.MCunc = 0.
         return self
     
     def __str__(self):
-        return  '   '+self.Name+'\n'+\
-                '      Nentries: {:.0f}\n      Nevents : {:.3f}\n'.format(self.Nentries,self.Nevents)+\
-                '      Cut Eff : {:.5f}\n      Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
+        if self.eff < 1:
+            return  '   '+self.Name+'\n'+\
+                    '      Nentries: {:.0f}\n      Nevents : {:.3f} ± {:.3f}\n'.format(self.Nentries,self.Nevents,self.MCunc)+\
+                    '      Cut Eff : {:.5f}\n      Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
+        else:
+            return  '   '+self.Name+'\n'+\
+                    '      Nentries: {:.0f}\n      Nevents : {:.3f}\n'.format(self.Nentries,self.Nevents)+\
+                    '      Cut Eff : {:.5f}\n      Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
 
 
 
