@@ -102,17 +102,19 @@ class CutFlowTable:
         ratio_style = kwargs.get('ratio_style','{:.1f}')
         MCunc       = kwargs.get('mcunc',False)
 
-        file = None
-        if len(args) > 0:
-            file = args[0]
-            file.write(r'\documentclass[12pt]{article}'+'\n'+\
+        TeX=None
+        if any([x for x in args if isinstance(x,file)]):
+            TeX = [x for x in args if isinstance(x,file)][0]
+            TeX.write(r'\documentclass[12pt]{article}'+'\n'+\
                        r'\usepackage{pdflscape,slashed}'+'\n'+\
                        r'\begin{document}'+'\n'+\
                        r'\begin{landscape}'+'\n\n\n\n'+\
                        '%%%%%% \\delta := |Ref. smp - smp_i| / ref_smp\n\n\n')
             for line in self.notes.split('\n'):
-                file.write('%%%% '+line+'\n')
-            file.write('\n\n\n\n')
+                TeX.write('%%%% '+line+'\n')
+            if MCunc:
+                TeX.write('\n%%%% MC Unc = Nevt * sqrt((1-eff)/NMC)\n')
+            TeX.write('\n\n\n\n')
 
         for SR in SR_list:
             txt = '\n\n%% '+SR+'\n\n'
@@ -204,14 +206,14 @@ class CutFlowTable:
                  (self.notes != '')*self.notes+'}\n'
             txt+='  \\end{center}\n'
             txt+='\\end{table}\n'
-            if file != None:
-                file.write(txt)
+            if TeX != None:
+                TeX.write(txt)
             else:
                 print(txt)
-        if file != None:
-            file.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
+        if TeX != None:
+            TeX.write('\n\n\n\n'+r'\end{landscape}'+'\n'+r'\end{document}'+'\n')
             if kwargs.get('make',True):
-                self.WriteMake(file,make=kwargs.get('make',True))
+                self.WriteMake(TeX,make=kwargs.get('make',True))
 
 
     def write_signal_comparison_table(self,*args,**kwargs):
