@@ -197,12 +197,12 @@ class CutFlowTable:
                     # else:
                 txt += r'\\'
                 txt += '\n'
-            entries = [x.Nentries for x in [self.ref_sample[SR].get_final_cut()]+\
-                                           [sample[SR].get_final_cut() for sample in self.samples]]
+            entries = [(x.Nentries,r' ($\Delta_{MC}'+r'={:.2f}\%$)'.format(100.*x.MCunc/max(x.Nevents,1e-10)))\
+                       for x in [self.ref_sample[SR].get_final_cut()]+[sample[SR].get_final_cut() for sample in self.samples]]
             txt+='    \\end{tabular}\n'
             txt+='    \\caption{'+SR.replace('_',' ')+\
-            (any([x<100 for x in entries]))*(' (This region might need more event $\\to$ MC event count = '+\
-                                             ', '.join([(x<1e99)*str(x)+(x==1e99)*' - ' for x in entries])+') ')+\
+            (any([x[0]<100 for x in entries]))*(' (This region might need more event $\\to$ MC event count = '+\
+                                             ', '.join([(x[0]<1e99)*(str(x[0])+x[1])+(x[0]==1e99)*' - ' for x in entries])+') ')+\
                  (self.notes != '')*self.notes+'}\n'
             txt+='  \\end{center}\n'
             txt+='\\end{table}\n'

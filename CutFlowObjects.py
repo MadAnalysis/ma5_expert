@@ -123,7 +123,7 @@ class Cut(object):
     def __str__(self):
         if self.eff < 1:
             return  '   '+self.Name+'\n'+\
-                    '      Nentries: {:.0f}\n      Nevents : {:.3f} ± {:.3f}\n'.format(self.Nentries,self.Nevents,self.MCunc)+\
+                    '      Nentries: {:.0f}\n      Nevents : {:.3f} ± {:.3f}(ΔMC)\n'.format(self.Nentries,self.Nevents,self.MCunc)+\
                     '      Cut Eff : {:.5f}\n      Rel Eff : {:.5f}'.format(self.eff,self.rel_eff)
         else:
             return  '   '+self.Name+'\n'+\
