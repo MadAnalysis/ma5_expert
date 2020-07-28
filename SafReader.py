@@ -86,13 +86,15 @@ class SAF:
         
         parsed['SampleGlobalInfo'] = {'xsec'    : float(parsed['SampleGlobalInfo'][0].split()[0]),
                                       'Nevents' : int(parsed['SampleGlobalInfo'][0].split()[2]),
-                                      'sumw'    : float(parsed['SampleGlobalInfo'][0].split()[3])}
+                                      'sumw'    : float(parsed['SampleGlobalInfo'][0].split()[3])-\
+                                                  float(parsed['SampleGlobalInfo'][0].split()[4])}
         parsed['FileInfo'] = [x.split(' ')[0][1:-1] for x in parsed['FileInfo']]
         
         for n, (line) in enumerate(SampleDetailedInfo):
             parsed['SampleDetailedInfo'][int(n)] = {'xsec'    : float(line.split()[0]),
                                                     'Nevents' : int(line.split()[2]),
-                                                    'sumw'    : float(line.split()[3])}
+                                                    'sumw'    : float(line.split()[3])-\
+                                                                float(line.split()[4])}
         return parsed
 
     def set_xsec(self,xsection):
@@ -100,3 +102,14 @@ class SAF:
         if xsection > 0. and saf != {}:
             saf['SampleGlobalInfo']['xsec'] = float(xsection)
         return saf
+
+    def get_detailedXsec(self):
+        xsec = 0.0
+        nevt = 0.0
+        for nfile, info in self.saf['SampleDetailedInfo'].items():
+            xsec += info['xsec']*info['Nevents']
+            nevt += info['Nevents']
+        return round(xsec/nevt, 8)
+
+    def get_xsec(self):
+        return self.saf['SampleGlobalInfo']['xsec']
