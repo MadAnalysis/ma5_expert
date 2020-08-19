@@ -153,7 +153,7 @@ class CutFlowTable:
                     else:
                         txt += tmp.format(cut.Nevents)
                 else:
-                    tmp = event_style+(MCunc and cut.Nentries>0)*(' \pm '+event_style)+' & '+eff_style
+                    tmp = event_style+(MCunc and cut.Nentries>0)*(' $ \pm $ '+event_style)+' & '+eff_style
                     if raw:
                         txt += tmp.format(cut.Nentries,cut.raw_rel_eff)
                     else:
@@ -171,7 +171,7 @@ class CutFlowTable:
                         else:
                             txt += tmp.format(smp[cutID].Nevents)
                     elif cutID > 0 and cut.rel_eff == 0:
-                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' \pm '+event_style)+\
+                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & - '
                         if raw:
                             txt += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff)
@@ -181,7 +181,7 @@ class CutFlowTable:
                             else:
                                 txt += tmp.format(smp[cutID].Nevents,smp[cutID].MCunc,smp[cutID].rel_eff)
                     else:
-                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' \pm '+event_style)+\
+                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & '+ratio_style+' '
                         if raw:
                             rel_eff =abs(1-(smp[cutID].raw_rel_eff/cut.raw_rel_eff))

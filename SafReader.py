@@ -109,7 +109,10 @@ class SAF:
         for nfile, info in self.saf['SampleDetailedInfo'].items():
             xsec += info['xsec']*info['Nevents']
             nevt += info['Nevents']
-        return round(xsec/nevt, 8)
+        if nevt > 0.:
+            return round(xsec/nevt, 8)
+        else:
+            return 0.
 
     def get_xsec(self):
         return self.saf['SampleGlobalInfo']['xsec']
