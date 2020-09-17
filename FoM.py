@@ -21,6 +21,7 @@ class FoM:
             self.sig     = -1
             self.S_B     = -1
             self.S_SB    = -1
+            self.S_sqSB  = -1
         else:
             if sys > 0.:
                 self.ZA      = self.asimovZ()
@@ -29,6 +30,7 @@ class FoM:
             self.sig  = nsignal/sqrt(nbkg)
             self.S_B  = nsignal/nbkg
             self.S_SB = nsignal/(nbkg+nsignal)
+            self.S_sqSB = nsignal/sqrt(nbkg+nsignal)
     
     def asimovZ(self):
         """
