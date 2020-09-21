@@ -169,7 +169,7 @@ class CutFlowTable:
                         if raw:
                             txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style))
                         else:
-                            txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style))
+                            txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style))
                     elif cutID > 0 and cut.rel_eff == 0:
                         tmp = ' & {}'+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & - '
@@ -177,9 +177,9 @@ class CutFlowTable:
                             txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].raw_rel_eff)
                         else:
                             if not (MCunc and smp[cutID].Nentries>0):
-                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].rel_eff)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].rel_eff)
                             else:
-                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff)
                     else:
                         tmp = ' & {}'+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & '+ratio_style+' '
@@ -189,9 +189,9 @@ class CutFlowTable:
                         else:
                             rel_eff =abs(1-(smp[cutID].rel_eff/cut.rel_eff))
                             if not (MCunc and smp[cutID].Nentries>0):
-                                txt  += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].rel_eff,rel_eff*100.)
+                                txt  += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].rel_eff,rel_eff*100.)
                             else:
-                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff,rel_eff*100.)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff,rel_eff*100.)
                     # if smp != self.samples[-1][SR]:
                     #     txt += ' & '  
                     # else:
