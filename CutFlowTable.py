@@ -147,51 +147,51 @@ class CutFlowTable:
                     name = name.replace('_',' ')
                 txt += '      '+name.ljust(40,' ') + '& '
                 if cutID == 0:
-                    tmp = event_style+' & - '
+                    tmp = '{}'+' & - '
                     if raw:
-                        txt += tmp.format(cut.Nentries)
+                        txt += tmp.format(scientific_LaTeX(cut.Nentries,sty=event_style))
                     else:
                         txt += tmp.format(cut.Nevents)
                 else:
-                    tmp = event_style+(MCunc and cut.Nentries>0)*(' $ \pm $ '+event_style)+' & '+eff_style
+                    tmp = '{}'+(MCunc and cut.Nentries>0)*(' $ \pm $ '+event_style)+' & '+eff_style
                     if raw:
-                        txt += tmp.format(cut.Nentries,cut.raw_rel_eff)
+                        txt += tmp.format(scientific_LaTeX(cut.Nentries,sty=event_style),cut.raw_rel_eff)
                     else:
                         if not (MCunc and cut.Nentries>0):
-                            txt += tmp.format(cut.Nevents,cut.rel_eff)
+                            txt += tmp.format(scientific_LaTeX(cut.Nevents,sty=event_style),cut.rel_eff)
                         else:
-                            txt += tmp.format(cut.Nevents,cut.MCunc,cut.rel_eff)
+                            txt += tmp.format(scientific_LaTeX(cut.Nevents,sty=event_style),cut.MCunc,cut.rel_eff)
 
                 for sample in self.samples:
                     smp = sample[SR]
                     if cutID == 0:
-                        tmp = ' & '+event_style+' & - & - '
+                        tmp = ' & {} & - & - '
                         if raw:
-                            txt += tmp.format(smp[cutID].Nentries)
+                            txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style))
                         else:
-                            txt += tmp.format(smp[cutID].Nevents)
+                            txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style))
                     elif cutID > 0 and cut.rel_eff == 0:
-                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
+                        tmp = ' & {}'+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & - '
                         if raw:
-                            txt += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff)
+                            txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].raw_rel_eff)
                         else:
                             if not (MCunc and smp[cutID].Nentries>0):
-                                txt += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].rel_eff)
                             else:
-                                txt += tmp.format(smp[cutID].Nevents,smp[cutID].MCunc,smp[cutID].rel_eff)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff)
                     else:
-                        tmp = ' & '+event_style+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
+                        tmp = ' & {}'+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & '+ratio_style+' '
                         if raw:
                             rel_eff =abs(1-(smp[cutID].raw_rel_eff/cut.raw_rel_eff))
-                            txt  += tmp.format(smp[cutID].Nentries,smp[cutID].raw_rel_eff,rel_eff*100.)
+                            txt  += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].raw_rel_eff,rel_eff*100.)
                         else:
                             rel_eff =abs(1-(smp[cutID].rel_eff/cut.rel_eff))
                             if not (MCunc and smp[cutID].Nentries>0):
-                                txt  += tmp.format(smp[cutID].Nevents,smp[cutID].rel_eff,rel_eff*100.)
+                                txt  += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].rel_eff,rel_eff*100.)
                             else:
-                                txt += tmp.format(smp[cutID].Nevents,smp[cutID].MCunc,smp[cutID].rel_eff,rel_eff*100.)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nentries,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff,rel_eff*100.)
                     # if smp != self.samples[-1][SR]:
                     #     txt += ' & '  
                     # else:
@@ -418,3 +418,17 @@ class CutFlowTable:
                     print 'Compilation failed.'
         else:
             raise ValueError('Can not find '+file.name)
+
+
+def scientific_LaTeX(val,sty='{:.1f}'):
+    if val > 1e3:
+        tmp = '{:.1e}'.format(val)
+        tmp = [float(x) for x in tmp.split('e+')]
+        tmp = r'${:.1f} \times 10^'.format(tmp[0]) + '{' + '{:.0f}'.format(tmp[1])+'}$'
+    elif val < 1e-3:
+        tmp = '{:.1e}'.format(val)
+        tmp = [float(x) for x in tmp.split('e-')]
+        tmp = r'${:.1f} \times 10^'.format(tmp[0]) + '{-' + '{:.0f}'.format(tmp[1])+'}$'
+    else:
+        tmp = sty.format(val)
+    return tmp
