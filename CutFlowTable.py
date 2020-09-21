@@ -422,7 +422,7 @@ class CutFlowTable:
 
 def scientific_LaTeX(val,sty='{:.1f}'):
     if val >= 1e4:
-        tmp = sty.format(val)
+        tmp = '{:.1e}'.format(val)
         tmp = [float(x) for x in tmp.split('e+')]
         tmp = r'${:.1f} \times 10^'.format(tmp[0]) + '{' + '{:.0f}'.format(tmp[1])+'}$'
     elif val < 1e-3 and val > 0.:
