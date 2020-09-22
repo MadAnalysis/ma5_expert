@@ -120,7 +120,8 @@ class CutFlowTable:
             txt = '\n\n%% '+SR+'\n\n'
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
-            txt+='  \\renewcommand{\\arraystretch}{1.}\n'
+            txt+='    \\renewcommand{\\arraystretch}{1.}\n'
+            # txt+='    \\setlength\\tabcolsep{2pt}\n'
             n_rows = len(self.samples)
             txt+='    \\begin{tabular}{l||cc|'+'|'.join(['ccc']*(n_rows))+'}\n'
             txt+='      & '
@@ -265,6 +266,7 @@ class CutFlowTable:
             txt+='\\begin{table}[h]\n'
             txt+='  \\begin{center}\n'
             txt+='  \\renewcommand{\\arraystretch}{1.}\n'
+            # txt+='  \\setlength\\tabcolsep{2pt}\n'
             n_rows = len(self.samples)
             txt+='    \\begin{tabular}{l||cc|'+'|'.join(['cc']*(n_rows))+'}\n'
             txt+='      & '
@@ -421,7 +423,7 @@ class CutFlowTable:
 
 
 def scientific_LaTeX(val,sty='{:.1f}'):
-    if val >= 1e4:
+    if val >= 1e5:
         tmp = '{:.1e}'.format(val)
         tmp = [float(x) for x in tmp.split('e+')]
         tmp = r'${:.1f} \times 10^'.format(tmp[0]) + '{' + '{:.0f}'.format(tmp[1])+'}$'
