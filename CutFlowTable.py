@@ -202,7 +202,8 @@ class CutFlowTable:
                 txt += r'\\'
                 txt += '\n'
             if finalMCunc:
-                finalMCunc = ['$ '+event_style+' \pm '+event_style+' $'.format(smp.Nevents,smp.MCunc) for smp in [self.ref_sample[SR].get_final_cut()]+\
+                tmp = '$ '+event_style+' \\pm '+event_style+' $'
+                finalMCunc = [tmp.format(smp.Nevents,smp.MCunc) for smp in [self.ref_sample[SR].get_final_cut()]+\
                                                                                                                  [sample[SR].get_final_cut() for sample in self.samples]]
             else:
                 finalMCunc = ''
