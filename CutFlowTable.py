@@ -212,7 +212,7 @@ class CutFlowTable:
             txt+='    \\caption{'+SR.replace('_',' ')+\
             (any([x[0]<100 for x in entries]))*(' (This region might need more event $\\to$ MC event count = '+\
                                              ', '.join([(x[0]<1e99)*(str(x[0])+x[1])+(x[0]==1e99)*' - ' for x in entries])+') ')+\
-                 (self.notes != '')*self.notes+(finalMCunc=!'')*('   ($N \\pm \\Delta_{\\rm MC} = $ '+','.join(finalMCunc)+')')+'}\n'
+                 (self.notes != '')*self.notes+(finalMCunc!='')*('   ($N \\pm \\Delta_{\\rm MC} = $ '+','.join(finalMCunc)+')')+'}\n'
             txt+='  \\end{center}\n'
             txt+='\\end{table}\n'
             if TeX != None:
