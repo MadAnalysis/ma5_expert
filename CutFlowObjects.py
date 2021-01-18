@@ -96,7 +96,10 @@ class Cut(object):
             if self.Nevents < 0.:
                 self.nevt        = 0.
                 self.Nevents     = 0.
-        self.MCunc = self.Nevents*sqrt(self.eff*(1.-self.eff)/float(self.Nentries)) if self.Nentries>0 else 0.
+        if self.eff <= 1:
+            self.MCunc = self.Nevents*sqrt(self.eff*(1.-self.eff)/float(self.Nentries)) if self.Nentries>0 else 0.
+        else:
+            self.MCunc = -1
 
 
     def __mul__(self,lumi):

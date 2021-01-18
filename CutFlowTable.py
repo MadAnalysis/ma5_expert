@@ -201,6 +201,7 @@ class CutFlowTable:
                     # else:
                 txt += r'\\'
                 txt += '\n'
+            
             if finalMCunc:
                 tmp = '$ '+event_style+' \\pm '+event_style+' $'
                 finalMCunc = [tmp.format(smp.Nevents,smp.MCunc) for smp in [self.ref_sample[SR].get_final_cut()]+\
@@ -321,10 +322,10 @@ class CutFlowTable:
 
                 if cut == self.ref_sample[SR].get_final_cut():
                     txt += r'\hline\hline'
-                    fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
                     txt += '\n     \\multicolumn{3}{c}{$S/B$} &'
                     for sample in self.samples:
                         smp = sample[SR]
+                        fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
                         txt += '\\multicolumn{2}{c}{'+'{:.3f}\\%'.format(100.*fom.S_B)+'}'
                         if smp != self.samples[-1][SR]:
                             txt += ' & ' 
@@ -334,6 +335,7 @@ class CutFlowTable:
                     txt += '\n     \\multicolumn{3}{c}{$S/S+B$} &'
                     for sample in self.samples:
                         smp = sample[SR]
+                        fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
                         txt += '\\multicolumn{2}{c}{'+'{:.3f}\\%'.format(100.*fom.S_SB)+'}'
                         if smp != self.samples[-1][SR]:
                             txt += ' & ' 
@@ -344,6 +346,7 @@ class CutFlowTable:
                     txt += '\n     \\multicolumn{3}{c}{$S/\sqrt{B}$}  &'
                     for sample in self.samples:
                         smp = sample[SR]
+                        fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
                         txt += '\\multicolumn{2}{c}{'+\
                                 '{:.3f}'.format(fom.sig)+'}'
                         if smp != self.samples[-1][SR]:
@@ -355,6 +358,7 @@ class CutFlowTable:
                         txt += '\n     \\multicolumn{3}{c}{$S/\sqrt{B+(B\Delta_{sys})^2}$}  &'
                         for sample in self.samples:
                             smp = sample[SR]
+                            fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
                             txt += '\\multicolumn{2}{c}{'+\
                                     '{:.3f}'.format(fom.sig_sys)+'}'
                             if smp != self.samples[-1][SR]:
@@ -366,6 +370,7 @@ class CutFlowTable:
                         txt += '\n     \\multicolumn{3}{c}{$Z_A$} &'
                         for sample in self.samples:
                             smp = sample[SR]
+                            fom = FoM(smp[cutID].Nevents,cut.Nevents,sys=sys)
                             txt += '\\multicolumn{2}{c}{'+\
                                     '${:.3f} \\pm {:.3f} $'.format(fom.ZA,fom.ZA_err)+'}'
                             if smp != self.samples[-1][SR]:
