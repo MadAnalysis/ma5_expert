@@ -6,8 +6,8 @@ Created on Thu Jan 30 17:50:43 2020
 @author: jackaraz
 contact: jackaraz@gmail.com
 """
-from CutFlowReader import *
-from FoM import FoM
+from ma5_expert.CutFlow.CutFlowReader import Collection, SignalRegion, Cut
+from ma5_expert.tools.FoM import FoM
 import os
 
 
@@ -431,7 +431,7 @@ class CutFlowTable:
                     file.close()
                     os.system('make')
                 except:
-                    print 'Compilation failed.'
+                    print('Compilation failed.')
         else:
             raise ValueError('Can not find '+file.name)
 

@@ -8,8 +8,8 @@ Created on Fri Jan 31 10:37:07 2020
 """
 
 import os
-from SafReader import SAF
-from CutFlowObjects import Cut, SignalRegion
+from ma5_expert.tools.SafReader import SAF
+from ma5_expert.CutFlow.CutFlowObjects import Cut, SignalRegion
 
 
 class Collection(object):
@@ -66,9 +66,6 @@ class Collection(object):
                 raise ValueError("Can't find the collection path! "+ collection_path)
         # If lumi is not given just set it to xsec [pb]
         if lumi > 1e-3: self * lumi
-
-    def __getitem__(self,name):
-        return self.SRdict[name]
     
     def keys(self):
         return self.SRdict.keys()
@@ -96,6 +93,7 @@ class Collection(object):
                 current_cut = Cut(Name=name, precut=precut,cut_0=cut_0, Nevents=val, Nentries=entries)
                 precut      = current_cut
             SR.add_cut(current_cut)
+        setattr(self, SR_name, SR)
         self.SRdict[SR_name] = SR
 
 
@@ -163,6 +161,7 @@ class Collection(object):
                     precut = current_cut
                 i+=1
             self.SRdict[currentSR.name] = currentSR
+            setattr(self,currentSR.name, currentSR)
             self.regiondata[currentSR.name] = currentSR.regiondata()
 
 
