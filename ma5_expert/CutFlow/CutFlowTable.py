@@ -1,13 +1,6 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 30 17:50:43 2020
-
-@author: jackaraz
-contact: jackaraz@gmail.com
-"""
-from ma5_expert.CutFlow.CutFlowReader import Collection, SignalRegion, Cut
-from ma5_expert.tools.FoM import FoM
+from ma5_expert.CutFlow.CutFlowReader import Collection
+from ma5_expert.CutFlow.Cut           import Cut
+from ma5_expert.tools.FoM             import FoM
 import os
 
 
@@ -30,10 +23,6 @@ class CutFlowTable:
                 Notes to be written in the caption. Default ''
             SR_list : LIST
                 List of the SRs to be written. Default all in the ref. input.
-
-        Returns
-        -------
-        None.
         """
         samples = [x for x in args if type(x) == Collection]
         sample_names = kwargs.get('sample_names',[])
