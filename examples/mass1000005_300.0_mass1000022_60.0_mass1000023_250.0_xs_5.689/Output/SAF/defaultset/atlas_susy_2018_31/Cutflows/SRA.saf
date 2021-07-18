@@ -1,0 +1,89 @@
+<SAFheader>
+</SAFheader>
+
+<InitialCounter>
+"Initial number of events"      #
+200000          0               # nentries
+2.277976e+01    0.000000e+00    # sum of weights
+2.594588e-03    0.000000e+00    # sum of weights^2
+</InitialCounter>
+
+<Counter>
+"$N_{lep} = 0$"                 # 1st cut
+156651          0               # nentries
+1.440089e+01    0.000000e+00    # sum of weights
+1.326661e-03    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$N_{j} \geq 6$"                # 2st cut
+65546           0               # nentries
+6.048645e+00    0.000000e+00    # sum of weights
+5.598206e-04    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$N_{b} \geq 4$"                # 3st cut
+19965           0               # nentries
+1.840285e+00    0.000000e+00    # sum of weights
+1.700875e-04    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\slashed{E}_T > 350$ [GeV]"   # 4st cut
+191             0               # nentries
+2.175267e-02    0.000000e+00    # sum of weights
+2.477376e-06    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$min(\Delta\phi(j_{1-4},\slashed{E}_T))>0.4$ [rad]"# 5st cut
+72              0               # nentries
+8.200151e-03    0.000000e+00    # sum of weights
+9.339238e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\tau^h$ veto"                 # 6st cut
+68              0               # nentries
+7.744776e-03    0.000000e+00    # sum of weights
+8.820820e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$p^{b_1}_T > 200$ [GeV]"       # 7st cut
+33              0               # nentries
+3.758569e-03    0.000000e+00    # sum of weights
+4.280863e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\Delta R_{max}(b,b)>2.5$"     # 8st cut
+25              0               # nentries
+2.847176e-03    0.000000e+00    # sum of weights
+3.242567e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\Delta R_{max-min}(b,b)<2.5$" # 9st cut
+25              0               # nentries
+2.847176e-03    0.000000e+00    # sum of weights
+3.242567e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$m(h_{cand})>80$ [GeV]"        # 10st cut
+10              0               # nentries
+1.139115e-03    0.000000e+00    # sum of weights
+1.297583e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$m_{eff} > 1$ [TeV]"           # 11st cut
+10              0               # nentries
+1.139115e-03    0.000000e+00    # sum of weights
+1.297583e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<SAFfooter>
+</SAFfooter>

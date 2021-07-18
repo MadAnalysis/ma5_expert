@@ -1,0 +1,4 @@
+atlas_susy_2018_31            vSFS        on    sfs_card_atlas_susy_2018_31.ma5                    #  ATLAS - 13 TeV - multibottoms + MET (139/fb)
+# Detector cards must be located in the PAD directories
+# Switches must be on or off
+# AnalysisName               PADType    Switch     DetectorCard#
