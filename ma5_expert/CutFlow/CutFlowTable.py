@@ -1,14 +1,7 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jan 30 17:50:43 2020
-
-@author: jackaraz
-contact: jackaraz@gmail.com
-"""
-from CutFlowReader import *
-from FoM import FoM
-import os
+from ma5_expert                       import CutFlowCollection
+from ma5_expert.CutFlow.Cut           import Cut
+from ma5_expert.tools.FoM             import FoM
+import os, math
 
 
 class CutFlowTable:
@@ -30,12 +23,8 @@ class CutFlowTable:
                 Notes to be written in the caption. Default ''
             SR_list : LIST
                 List of the SRs to be written. Default all in the ref. input.
-
-        Returns
-        -------
-        None.
         """
-        samples = [x for x in args if type(x) == Collection]
+        samples = [x for x in args if type(x) == CutFlowCollection]
         sample_names = kwargs.get('sample_names',[])
         if len(sample_names) == len(samples):
             self.sample_names = sample_names
@@ -52,7 +41,10 @@ class CutFlowTable:
 
 
     def _sorter(self,x):
-        return self.ref_sample[x].get_final_cut().Nentries
+        if not math.isinf(self.ref_sample[x].final_cut.Nentries):
+            return self.ref_sample[x].final_cut.Nevents
+
+        return self.ref_sample[x].final_cut.Nentries
 
 
     def write_comparison_table(self,*args,**kwargs):
@@ -65,7 +57,7 @@ class CutFlowTable:
             Optional, if there is a file input, tables will be written in the 
             file otherwise all will be printed on the screen.
         **kwargs : 
-            only_alive : BOOLEAN (default True)
+            only_alive : BOOLEAN (default False)
                 only write the SRs which has more than zero yield for reference
                 collection.
             make : BOOL
@@ -88,9 +80,9 @@ class CutFlowTable:
         LaTeX tables of signal regions.
         """
         if self.SR_list == []:
-            SR_list = self.ref_sample.keys()
-            if kwargs.get('only_alive',True): 
-                SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
+            SR_list = self.ref_sample.SRnames
+            if kwargs.get('only_alive', False):
+                SR_list = [x for x in SR_list if self.ref_sample[x].isAlive]
             SR_list.sort(key=self._sorter, reverse=True)
         else:
             SR_list = self.SR_list
@@ -146,7 +138,7 @@ class CutFlowTable:
             txt += '\\\ \\hline\n'
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
-                name = cut.Name
+                name = cut.id
                 if '$' not in name:
                     name = name.replace('_',' ')
                 txt += '      '+name.ljust(40,' ') + '& '
@@ -164,7 +156,7 @@ class CutFlowTable:
                         if not (MCunc and cut.Nentries>0):
                             txt += tmp.format(scientific_LaTeX(cut.Nevents,sty=event_style),cut.rel_eff)
                         else:
-                            txt += tmp.format(scientific_LaTeX(cut.Nevents,sty=event_style),cut.MCunc,cut.rel_eff)
+                            txt += tmp.format(scientific_LaTeX(cut.Nevents,sty=event_style),cut.mc_unc,cut.rel_eff)
 
                 for sample in self.samples:
                     smp = sample[SR]
@@ -183,7 +175,7 @@ class CutFlowTable:
                             if not (MCunc and smp[cutID].Nentries>0):
                                 txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].rel_eff)
                             else:
-                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].mc_unc,smp[cutID].rel_eff)
                     else:
                         tmp = ' & {}'+(MCunc and smp[cutID].Nentries>0)*(' $ \pm $ '+event_style)+\
                               ' & '+eff_style+' & '+ratio_style+' '
@@ -195,7 +187,7 @@ class CutFlowTable:
                             if not (MCunc and smp[cutID].Nentries>0):
                                 txt  += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].rel_eff,rel_eff*100.)
                             else:
-                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].MCunc,smp[cutID].rel_eff,rel_eff*100.)
+                                txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents,sty=event_style),smp[cutID].mc_unc,smp[cutID].rel_eff,rel_eff*100.)
                     # if smp != self.samples[-1][SR]:
                     #     txt += ' & '  
                     # else:
@@ -204,12 +196,12 @@ class CutFlowTable:
             
             if finalMCunc:
                 tmp = '$ '+event_style+' \\pm '+event_style+' $'
-                finalMCunc = [tmp.format(smp.Nevents,smp.MCunc) for smp in [self.ref_sample[SR].get_final_cut()]+\
+                finalMCunc = [tmp.format(smp.Nevents,smp.mc_unc) for smp in [self.ref_sample[SR].get_final_cut()]+\
                                                                            [sample[SR].get_final_cut() for sample in self.samples]]
             else:
                 finalMCunc = ''
-            entries = [(x.Nentries,r' ($\Delta_{MC}'+r'={:.2f}\%$)'.format(100.*x.MCunc/max(x.Nevents,1e-10)))\
-                       for x in [self.ref_sample[SR].get_final_cut()]+[sample[SR].get_final_cut() for sample in self.samples]]
+            entries = [(x.Nentries,r' ($\Delta_{MC}'+r'={:.2f}\%$)'.format(100.*x.mc_unc/max(x.Nevents,1e-10)))\
+                       for x in [self.ref_sample[SR].final_cut]+[sample[SR].final_cut for sample in self.samples]]
             txt+='    \\end{tabular}\n'
             txt+='    \\caption{'+SR.replace('_',' ')+\
             (any([x[0]<100 for x in entries]))*(' (This region might need more event $\\to$ MC event count = '+\
@@ -255,9 +247,9 @@ class CutFlowTable:
 
         """
         sys = kwargs.get('sys',0.2)
-        SR_list = self.ref_sample.keys()
+        SR_list = self.ref_sample.SRnames
         if kwargs.get('only_alive',True): 
-            SR_list = [x for x in SR_list if self.ref_sample[x].isAlive()]
+            SR_list = [x for x in SR_list if self.ref_sample[x].isAlive]
         SR_list.sort(key=self._sorter, reverse=True)
         file = None
         if len(args) > 0:
@@ -298,7 +290,7 @@ class CutFlowTable:
                     txt += '\\\ \\hline\n'
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
-                name = cut.Name
+                name = cut.id
                 if '$' not in name:
                     name = name.replace('_',' ')
                 txt += '      '+name.ljust(40,' ') + '& '
@@ -320,7 +312,7 @@ class CutFlowTable:
                     else:
                         txt += r'\\'
 
-                if cut == self.ref_sample[SR].get_final_cut():
+                if cut == self.ref_sample[SR].final_cut:
                     txt += r'\hline\hline'
                     txt += '\n     \\multicolumn{3}{c}{$S/B$} &'
                     for sample in self.samples:
@@ -431,7 +423,7 @@ class CutFlowTable:
                     file.close()
                     os.system('make')
                 except:
-                    print 'Compilation failed.'
+                    print('Compilation failed.')
         else:
             raise ValueError('Can not find '+file.name)
 

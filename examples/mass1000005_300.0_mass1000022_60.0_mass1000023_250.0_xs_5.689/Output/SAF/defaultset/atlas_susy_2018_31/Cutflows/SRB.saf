@@ -1,0 +1,89 @@
+<SAFheader>
+</SAFheader>
+
+<InitialCounter>
+"Initial number of events"      #
+200000          0               # nentries
+2.277976e+01    0.000000e+00    # sum of weights
+2.594588e-03    0.000000e+00    # sum of weights^2
+</InitialCounter>
+
+<Counter>
+"$N_{lep} = 0$"                 # 1st cut
+156651          0               # nentries
+1.440089e+01    0.000000e+00    # sum of weights
+1.326661e-03    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$N_{j} \geq 5$"                # 2st cut
+106026          0               # nentries
+9.764596e+00    0.000000e+00    # sum of weights
+9.015414e-04    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$N_{b} \geq 4$"                # 3st cut
+27602           0               # nentries
+2.540016e+00    0.000000e+00    # sum of weights
+2.342853e-04    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\slashed{E}_T > 350$ [GeV]"   # 4st cut
+221             0               # nentries
+2.516974e-02    0.000000e+00    # sum of weights
+2.866589e-06    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$min(\Delta\phi(j_{1-4},\slashed{E}_T))>0.4$ [rad]"# 5st cut
+77              0               # nentries
+8.769613e-03    0.000000e+00    # sum of weights
+9.987811e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\tau^h$ veto"                 # 6st cut
+73              0               # nentries
+8.314237e-03    0.000000e+00    # sum of weights
+9.469393e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$m(h_{cand1},h_{cand2})_{avg}\in[75,175]$ [GeV]"# 7st cut
+33              0               # nentries
+3.758048e-03    0.000000e+00    # sum of weights
+4.279677e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"Leading jet non-b-tagged"      # 8st cut
+27              0               # nentries
+3.074937e-03    0.000000e+00    # sum of weights
+3.501942e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$p^{j_1}_T > 350$ [GeV]"       # 9st cut
+23              0               # nentries
+2.619530e-03    0.000000e+00    # sum of weights
+2.983453e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$|\Delta\phi(j_{1},\slashed{E}_T)|>2.8$ [rad]"# 10st cut
+15              0               # nentries
+1.708529e-03    0.000000e+00    # sum of weights
+1.946048e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$m_{eff} > 1$ [TeV]"           # 11st cut
+15              0               # nentries
+1.708529e-03    0.000000e+00    # sum of weights
+1.946048e-07    0.000000e+00    # sum of weights^2
+</Counter>
+
+<SAFfooter>
+</SAFfooter>

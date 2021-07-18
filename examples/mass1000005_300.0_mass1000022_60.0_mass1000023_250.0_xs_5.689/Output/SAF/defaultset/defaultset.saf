@@ -1,0 +1,25 @@
+<SAFheader>
+</SAFheader>
+
+<SampleGlobalInfo>
+# xsection     xsection_error nevents        sum_weight+    sum_weight-    
+5.694940e+00   0.000000e+00   200000         0.000000e+00   0.000000e+00   
+</SampleGlobalInfo>
+
+<FileInfo>
+"/pool/condor/dir_23430/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0/Events/run_04/tag_1_pythia8_events.hepmc.gz" # file 1 / 4
+"/pool/condor/dir_23430/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0/Events/run_02/tag_1_pythia8_events.hepmc.gz" # file 2 / 4
+"/pool/condor/dir_23430/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0/Events/run_01/tag_1_pythia8_events.hepmc.gz" # file 3 / 4
+"/pool/condor/dir_23430/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0/Events/run_03/tag_1_pythia8_events.hepmc.gz" # file 4 / 4
+</FileInfo>
+
+<SampleDetailedInfo>
+# xsection     xsection_error nevents        sum_weight+    sum_weight-    
+5.695710e+00   0.000000e+00   50000          0.000000e+00   0.000000e+00    # file 1 / 4
+5.698110e+00   0.000000e+00   50000          0.000000e+00   0.000000e+00    # file 2 / 4
+5.688680e+00   0.000000e+00   50000          0.000000e+00   0.000000e+00    # file 3 / 4
+5.697260e+00   0.000000e+00   50000          0.000000e+00   0.000000e+00    # file 4 / 4
+</SampleDetailedInfo>
+
+<SAFfooter>
+</SAFfooter>

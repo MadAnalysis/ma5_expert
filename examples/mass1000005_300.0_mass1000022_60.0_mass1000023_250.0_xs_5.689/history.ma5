@@ -1,0 +1,6 @@
+set main.currentdir = /pool/condor/dir_23430/madanalysis5
+set main.recast=on
+set main.recast.card_path = /pool/condor/dir_23430/recasting_card.dat
+
+import /pool/condor/dir_23430/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0/Events/run_0?/tag_1_pythia8_events.hepmc.gz
+set defaultset.xsection=5.689

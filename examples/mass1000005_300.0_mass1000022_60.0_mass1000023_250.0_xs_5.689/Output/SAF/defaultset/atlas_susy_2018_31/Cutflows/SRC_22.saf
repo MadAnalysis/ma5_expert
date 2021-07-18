@@ -1,0 +1,54 @@
+<SAFheader>
+</SAFheader>
+
+<InitialCounter>
+"Initial number of events"      #
+200000          0               # nentries
+2.277976e+01    0.000000e+00    # sum of weights
+2.594588e-03    0.000000e+00    # sum of weights^2
+</InitialCounter>
+
+<Counter>
+"$N_{lep} = 0$"                 # 1st cut
+156651          0               # nentries
+1.440089e+01    0.000000e+00    # sum of weights
+1.326661e-03    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$N_{j} \geq 4$"                # 2st cut
+137407          0               # nentries
+1.263973e+01    0.000000e+00    # sum of weights
+1.165312e-03    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$N_{b} \geq 3$"                # 3st cut
+69597           0               # nentries
+6.400943e+00    0.000000e+00    # sum of weights
+5.900051e-04    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\slashed{E}_T > 250$ [GeV]"   # 4st cut
+2604            0               # nentries
+2.965833e-01    0.000000e+00    # sum of weights
+3.377946e-05    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$min(\Delta\phi(j_{1-4},\slashed{E}_T))>0.4$ [rad]"# 5st cut
+1302            0               # nentries
+1.482924e-01    0.000000e+00    # sum of weights
+1.688990e-05    0.000000e+00    # sum of weights^2
+</Counter>
+
+<Counter>
+"$\slashed{E}_T$ Sig. $\in [22,24]\ [\sqrt{\rm GeV}]$"# 6st cut
+2               0               # nentries
+2.279074e-04    0.000000e+00    # sum of weights
+2.597089e-08    0.000000e+00    # sum of weights^2
+</Counter>
+
+<SAFfooter>
+</SAFfooter>
