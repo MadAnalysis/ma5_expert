@@ -61,6 +61,10 @@ class CutFlow:
         for cut in self:
             cut._lumi = lumi
 
+    @property
+    def CutNames(self):
+        return list(self.keys())
+
     def __len__(self):
         return len(self._data)
 
@@ -68,13 +72,13 @@ class CutFlow:
         return (cut for cut in self._data)
 
     def items(self):
-        return ((cut.id, cut) for cut in self._data)
+        return ((ix, cut) for ix, cut in enumerate(self._data))
 
     def keys(self):
         return (cut.id for cut in self._data)
 
     def getCut(self, id):
-        for cut in self._data:
+        for cut in self:
             if cut.id == id:
                 return cut
 

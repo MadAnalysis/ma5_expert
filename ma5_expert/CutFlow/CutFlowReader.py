@@ -40,13 +40,13 @@ class Collection(object):
 
         """
         self.SR_collection_path = ''
-        self.xsec    = kwargs.get('xsection',0.0) + kwargs.get('xsec',0.0)
-        self.nevents = kwargs.get('nevents', None)
+        xsec    = kwargs.get('xsection',0.0) + kwargs.get('xsec',0.0)
+        nevents = kwargs.get('nevents', None)
         self.lumi    = kwargs.get('lumi',    None)
 
         if saf_file != False:
-            self.saf            = SAF(saf_file=saf_file, xsection=xsec)
-            self.xsec           = self.saf.xsec
+            self.saf = SAF(saf_file=saf_file, xsection=xsec)
+            xsec     = self.saf.xsec
 
         self.collection_name    = kwargs.get('name', '__unknown_collection__')
         self._srID = []
@@ -54,7 +54,7 @@ class Collection(object):
         if cutflow_path != '':
             if os.path.isdir(cutflow_path):
                 self.cutflow_path = os.path.normpath(cutflow_path)
-                self._readCollection()
+                self._readCollection(xsec, nevents)
             else:
                 raise ValueError("Can't find the collection path! "+ cutflow_path)
 
@@ -65,7 +65,7 @@ class Collection(object):
             if key == item:
                 return sr
 
-    def _readCollection(self):
+    def _readCollection(self, xsec: Optional[float] = None, nevents: Optional[float] = None):
         for sr in [x for x in os.listdir(self.cutflow_path) if x.endswith(".saf")]:
             fl = os.path.join(self.cutflow_path, sr)
             with open(fl, 'r') as f:
@@ -82,8 +82,8 @@ class Collection(object):
                         Nentries=int(cutflow[i].split()[0])+ int(cutflow[i].split()[1]),
                         sumw=float(cutflow[i+1].split()[0])+ float(cutflow[i+1].split()[1]),
                         sumw2=float(cutflow[i+2].split()[0])+ float(cutflow[i+2].split()[1]),
-                        xsec=self.xsec,
-                        Nevents = self.nevents,
+                        xsec=xsec,
+                        Nevents = nevents,
                         lumi = self.lumi,
                     )
                     currentSR.addCut(current_cut)
@@ -95,7 +95,7 @@ class Collection(object):
                         Nentries=int(cutflow[i+1].split()[0])+ int(cutflow[i+1].split()[1]),
                         sumw=float(cutflow[i+2].split()[0])+ float(cutflow[i+2].split()[1]),
                         sumw2=float(cutflow[i+3].split()[0])+ float(cutflow[i+3].split()[1]),
-                        xsec   = self.xsec,
+                        xsec   = xsec,
                         previous_cut = currentSR[-1],
                         initial_cut  = currentSR[0],
                         lumi = self.lumi
@@ -111,7 +111,11 @@ class Collection(object):
                 currentSR.id = f"SR_{len(self.srID)}"
                 setattr(self, currentSR.id, currentSR)
                 self._srID.append(currentSR.id)
-    
+
+    @property
+    def SRnames(self):
+        return list(self.keys())
+
     def keys(self):
         return (x for x in self._srID)
 

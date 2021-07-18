@@ -1,6 +1,7 @@
 __version__='0.0.1'
 
-import ma5_expert.CutFlow as CutFlow
+from ma5_expert.CutFlow.CutFlowReader import Collection as CutFlowCollection
+from ma5_expert.CutFlow.CutFlowTable  import CutFlowTable
 
 import logging
 import sys
