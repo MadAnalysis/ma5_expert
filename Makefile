@@ -1,8 +1,9 @@
 #! /usr/bin/env bash
 
+
 .PHONY: clean
 clean:
-    rm -rf ma5_expert.egg-info/
+	rm -rf ma5_expert.egg-info/
 
 
 #.PHONY: requirements
@@ -12,14 +13,9 @@ clean:
 
 .PHONY: install
 install:
-    pip install -e .
+	pip install -e .
 
 
 .PHONY: all
 all:
-    make install
-
-
-.PHONY: uninstall
-uninstall:
-    pip uninstall ma5_expert
+	make install
