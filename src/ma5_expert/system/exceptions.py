@@ -1,6 +1,7 @@
 Red = "\x1b[31m"
 End = "\x1b[0m"
 
+
 class InvalidInput(Exception):
     """Invalid Domain Exception"""
 

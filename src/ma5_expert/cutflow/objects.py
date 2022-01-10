@@ -1,11 +1,11 @@
-from math import sqrt
+import logging
+from typing import Text, Sequence
 
 from ma5_expert.system.exceptions import InvalidInput
-from ma5_expert.CutFlow.Cut import Cut
-from typing import List, Any, Union, Tuple, Text, Dict, Sequence, Optional
-import logging
+from .cut import Cut
 
 log = logging.getLogger("ma5_expert")
+
 
 class CutFlow:
     """
@@ -16,7 +16,10 @@ class CutFlow:
     cutflow : Sequence[Cut]
         list of cuts
     """
-    def __init__(self, name: Text = "__unknown_cutflow__", cutflow: Sequence[Cut] = None):
+
+    def __init__(
+        self, name: Text = "__unknown_cutflow__", cutflow: Sequence[Cut] = None
+    ):
         self.id = name
         if cutflow is None:
             self._data = []
@@ -40,8 +43,8 @@ class CutFlow:
     @property
     def isAlive(self):
         if self.final_cut.Nentries is not None:
-            return (self.final_cut.Nentries > 0)
-        return (self.final_cut.Nevents > 0.)
+            return self.final_cut.Nentries > 0
+        return self.final_cut.Nevents > 0.0
 
     @property
     def xsec(self):
@@ -86,7 +89,7 @@ class CutFlow:
 
     @property
     def regiondata(self):
-        return {self.id : {'Nf' : self.final_cut.sumW, 'N0' : self[0].sumW} }
+        return {self.id: {"Nf": self.final_cut.sumW, "N0": self[0].sumW}}
 
     def __repr__(self):
         txt = f"* {self.id} :\n"

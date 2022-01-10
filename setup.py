@@ -17,14 +17,13 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jackaraz/ma5_expert",
+    project_urls={
+        "Bug Tracker": "https://github.com/jackaraz/ma5_expert/issues",
+    },
     author="Jack Y. Araz",
     author_email=("jack.araz@durham.ac.uk"),
     license="MIT",
-    packages=[
-        "ma5_expert",
-        "ma5_expert.CutFlow",
-        "ma5_expert.tools",
-    ],
+    package_dir={"": "src"},
     install_requires=requirements,
     python_requires=">=3.6",
     classifiers=[

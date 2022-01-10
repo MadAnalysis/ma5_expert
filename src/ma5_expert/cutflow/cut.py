@@ -33,27 +33,28 @@ class Cut:
     lumi : float
         luminosity [fb^-1]
     """
+
     def __init__(
-            self,
-            name: Optional[Text] = '__unknown_cut__',
-            Nentries: Optional[int] = None,
-            sumw: Optional[float] = None,
-            sumw2: Optional[float] = None,
-            previous_cut: Optional[Any] = None,
-            initial_cut: Optional[Any] = None,
-            xsec: Optional[float] = None,
-            Nevents: Optional[float] = None,
-            lumi: Optional[float] = None,
+        self,
+        name: Optional[Text] = "__unknown_cut__",
+        Nentries: Optional[int] = None,
+        sumw: Optional[float] = None,
+        sumw2: Optional[float] = None,
+        previous_cut: Optional[Any] = None,
+        initial_cut: Optional[Any] = None,
+        xsec: Optional[float] = None,
+        Nevents: Optional[float] = None,
+        lumi: Optional[float] = None,
     ):
 
-        self.id            = name # Name of the cut
-        self.Nentries      = Nentries if Nentries is not None else 0 # Number of MC events
-        self._sumW         = sumw # sum of weights
-        self._sumW2        = sumw2 # sum of square of the weights
-        self._initial_cut  = initial_cut
+        self.id = name  # Name of the cut
+        self.Nentries = Nentries if Nentries is not None else 0  # Number of MC events
+        self._sumW = sumw  # sum of weights
+        self._sumW2 = sumw2  # sum of square of the weights
+        self._initial_cut = initial_cut
         self._previous_cut = previous_cut
-        self._lumi         = lumi
-        self._xsection     = xsec
+        self._lumi = lumi
+        self._xsection = xsec
 
         if Nevents is not None:
             self._Nevents = Nevents
@@ -153,18 +154,20 @@ class Cut:
         Monte Carlo uncertainty
         """
         if self.Nentries > 0 and self._lumi is not None:
-            return self.Nevents * sqrt( self.eff*(1.-self.eff) / float(self.Nentries))
+            return self.Nevents * sqrt(
+                self.eff * (1.0 - self.eff) / float(self.Nentries)
+            )
 
-        return 0.
+        return 0.0
 
     @property
     def Nevents(self) -> float:
         if hasattr(self, "_Nevents"):
             return self._Nevents
         else:
-            if self.lumi >= 0.:
-                if self.xsec >= 0.:
-                    return self.xsec * self.eff * 1000. * self._lumi
+            if self.lumi >= 0.0:
+                if self.xsec >= 0.0:
+                    return self.xsec * self.eff * 1000.0 * self._lumi
                 else:
                     return self.eff * self._initial_cut.Nevents
             else:
@@ -173,12 +176,13 @@ class Cut:
 
     def __repr__(self):
         nentries = self.Nentries if self.Nentries is not None else -1
-        txt = f"  * {self.id} : \n" +\
-              f"     - Number of Entries    : {nentries:.0f}\n"+\
-              f"     - Number of Events     : {self.Nevents:.3f} ± {self.mc_unc:.3f}(ΔMC)\n" + \
-              f"     - Cut & Rel Efficiency : {self.eff:.3f}, {self.rel_eff:.3f}\n"
+        txt = (
+            f"  * {self.id} : \n"
+            + f"     - Number of Entries    : {nentries:.0f}\n"
+            + f"     - Number of Events     : {self.Nevents:.3f} ± {self.mc_unc:.3f}(ΔMC)\n"
+            + f"     - Cut & Rel Efficiency : {self.eff:.3f}, {self.rel_eff:.3f}\n"
+        )
         return txt
-
 
     def __str__(self):
         return self.__repr__()
