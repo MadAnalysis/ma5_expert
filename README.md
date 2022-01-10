@@ -1,4 +1,7 @@
 # MadAnalysis 5 Interpreter For Expert Mode
+[![EPJC](https://img.shields.io/static/v1?style=plastic&label=DOI&message=10.1140/epjc/s10052-021-09052-5&color=blue)](https://doi.org/10.1140/epjc/s10052-021-09052-5)
+[![arxiv](https://img.shields.io/static/v1?style=plastic&label=arXiv&message=2006.09387&color=brightgreen)](https://arxiv.org/abs/2006.09387)
+
  MadAnalysis 5 output interpreter for expert mode. Parses the cutflow collection and 
  constructs it with an interactable interface (histogram interpreter coming soon). 
 
@@ -24,8 +27,8 @@ Parsing a cutflow simply requires the path of the `CutFlows` folder and optional
 and/or `Nevents`. Note that `xsec` overwrites the number of events option, if provided number of events
 are always calculated using the cross section.
 ```python
-from ma5_expert import CutFlowCollection
-ma5 = CutFlowCollection(
+import ma5_expert as ma5
+sample = ma5.cutflow.Collection(
     "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Cutflows",
     xsection=5.689, lumi=139.
 )
@@ -33,14 +36,14 @@ ma5 = CutFlowCollection(
 Here the first input is the path of the `CutFlows` folder and the rest are simply cross section and 
 luminosity information. One can see the signal regions by simply printing the `keys` of the `CutFlowCollection` object;
 ```python
-print(ma5.SRnames)
+print(sample.SRnames)
 # Output: 
 # ['SRC_28', 'SRA_M', 'SRA_L', 'SRA_H', 'SRA', 'SRC', 'SRB', 'SRC_26', 'SRC_24', 'SRC_22']
 ```
 Each signal region is accessible through `CutFlowCollection` object. For instance one can get the names of 
 the cuts applied in one of the signal regions.
 ```python
-print(ma5.SRA.CutNames)
+print(sample.SRA.CutNames)
 # Output: 
 # ['Initial', '$N_{lep} = 0$', '$N_{j} \\geq 6$', '$N_{b} \\geq 4$', 
 # '$\\slashed{E}_T > 350$ [GeV]', '$min(\\Delta\\phi(j_{1-4},\\slashed{E}_T))>0.4$ [rad]', 
@@ -49,7 +52,7 @@ print(ma5.SRA.CutNames)
 ```
 Or simply print the entire cutflow;
 ```python
-print(ma5.SRA)
+print(sample.SRA)
 # Output: 
 # * SRA :
 #  * Initial :
@@ -106,13 +109,13 @@ cut efficiency and relative efficiency. The error in number of events is the Mon
 
 It is also possible to access practical information 
 ```python
-print(ma5.SRA.isAlive)
+print(sample.SRA.isAlive)
 # Output: True
 ```
 which simply checks the number of entries in the final cut. Hence one can remove the SRs which does
 not have any statistics;
 ```python
-alive = ma5.get_alive()
+alive = sample.get_alive()
 print(f"Number of cutflows survived : {len(alive)},\nNames of the cutflows : { ', '.join([x.id for x in alive]) }")
 # Output: 
 # Number of cutflows survived : 8,
@@ -120,7 +123,7 @@ print(f"Number of cutflows survived : {len(alive)},\nNames of the cutflows : { '
 ```
 Each cut is accessible through the interface;
 ```python
-fifth = ma5.SRA[5]
+fifth = sample.SRA[5]
 print(f"Efficiency : {fifth.eff:.3f}, Relative MC efficiency {fifth.mc_rel_eff:.3f}, number of events {fifth.Nevents:.1f}, sum of weights {fifth.sumW:.3f}")
 # Output: 
 # Efficiency : 0.0004, Relative MC efficiency 0.377, number of events 284.7, sum of weights 0.008
@@ -129,7 +132,7 @@ One can also construct independent signal regions for sake of comparisson with M
 ```python
 SRA_presel = [319.7,230.5,192.3,87.9,45.1,20.9,19.3,18.2,17.6,15.0,13.7]
 
-ATLAS = CutFlowCollection() 
+ATLAS = ma5.cutflow.Collection() 
 
 ATLAS.addSignalRegion('SRA',   ma5.SRA.CutNames,   SRA_presel+[13.7])
 ATLAS.addSignalRegion('SRA_L', ma5.SRA_L.CutNames, SRA_presel+[0.4])
