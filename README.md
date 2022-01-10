@@ -6,7 +6,7 @@
  constructs it with an interactable interface (histogram interpreter coming soon). 
 
 ## Installation
-`pip install -e .` or use `make install`
+`pip install ma5_expert`
 
 ## Cutflow Collection
 
