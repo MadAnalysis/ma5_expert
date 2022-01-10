@@ -12,7 +12,7 @@ if os.path.isfile("./requirements.txt"):
 
 setup(
     name="ma5_expert",
-    version="0.0.1",
+    version="1.0.0",
     description=("MadAnalysis 5 interpreter for Expert mode"),
     long_description=long_description,
     long_description_content_type="text/markdown",
