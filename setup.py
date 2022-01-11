@@ -20,7 +20,7 @@ setup(
     project_urls={
         "Bug Tracker": "https://github.com/jackaraz/ma5_expert/issues",
     },
-    download_url = "https://github.com/jackaraz/ma5_expert/archive/refs/tags/v1.0.1.tar.gz",
+    download_url = "https://github.com/jackaraz/ma5_expert/archive/refs/tags/v1.0.2.tar.gz",
     author="Jack Y. Araz",
     author_email=("jack.araz@durham.ac.uk"),
     license="MIT",
