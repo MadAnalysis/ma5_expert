@@ -95,7 +95,10 @@ class Cut:
         """
         if isinstance(self._initial_cut, Cut):
             if self.sumW is not None:
-                return self.sumW / self._initial_cut.sumW
+                try:
+                    return self.sumW / self._initial_cut.sumW
+                except ZeroDivisionError as err:
+                    return 0.
             else:
                 try:
                     return float(self.Nevents) / self._initial_cut.Nevents
