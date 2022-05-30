@@ -8,7 +8,12 @@
 ## Installation
 `pip install ma5-expert`
 
-## Cutflow Collection
+## Outline
+* [Cutflow Collection](#cutflow-collection)
+* [Histogram Collection](#histogram-collection)
+* [Citation](#citation)
+
+### Cutflow Collection
 
  * Parse all the signal regions and construct an object-base, interactable cutflow.
  * Write combined LaTeX tables for different samples.
@@ -141,7 +146,41 @@ ATLAS.addSignalRegion('SRA_H', ma5.SRA_H.CutNames, SRA_presel+[7.0])
 ```
 where all properties shown above applies to this new object as well.
 
-## Citation 
+### Histogram Collection
+
+* Parse all the histograms available in the `Histos.saf` file into interactable histogram object.
+
+```python
+import ma5_expert as ma5
+collection = ma5.histogram.Collection(
+    "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf", 
+    xsection=5.689, lumi=139.
+)
+
+print(collection)
+# Collection of 6 histograms from examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms
+#    * MadAnalysis 5 Histogram: SRA_Meff
+#    * MadAnalysis 5 Histogram: SRA_Mh
+#    * MadAnalysis 5 Histogram: SRB_PTj1
+#    * MadAnalysis 5 Histogram: SRB_MhAvg
+#    * MadAnalysis 5 Histogram: SRC_MET
+#    * MadAnalysis 5 Histogram: SRC_Sig
+```
+
+Extract the plotting information:
+```python
+xbins, bins, weights = collection.lumi_histogram("SRA_Mh")
+plt.hist(xbins, bins=bins, weights=weights)
+plt.xlabel("$M_{h}\ {\\rm [GeV]}$")
+plt.ylabel("${\\rm Number\ of\ events}$")
+plt.xlim([min(bins), max(bins)])
+plt.show()
+```
+<p align="center">
+<img src="./examples/SRA_Mh.png" alt="SRA_Mh" style="width:400px;"/>
+</p>
+
+### Citation 
 Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 
 ```bibtex
