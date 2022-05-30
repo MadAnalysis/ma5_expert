@@ -1,7 +1,7 @@
 import os, re
 import numpy as np
 from decimal import Decimal
-from typing import Text, MutableSequence, Union, Iterable, Tuple
+from typing import Text, MutableSequence, Union, Iterable, Tuple, Optional
 
 from collections import OrderedDict
 
@@ -74,7 +74,7 @@ class Collection:
             sum of weights
         """
         for key, item in self.items():
-            item.weight_normalisation(sumW)
+            item.weight_normalisation = sumW
 
     def append(self, histogram: Histo):
         assert isinstance(histogram, Histo), "Wrong type of input."
@@ -156,6 +156,38 @@ class Collection:
         """
         histogram = self[histo]
         return histogram.xbins, histogram.bins, histogram.weights
+
+    def to_yoda(self, save: Optional[Text] = None) -> MutableSequence:
+        """
+        Convert MadAnalysis 5 histograms to yoda histograms
+
+        Parameters
+        ----------
+        save: Text
+            file path with yoda extension
+
+        Returns
+        -------
+        List of yoda histograms
+        """
+        try:
+            import yoda
+        except ImportError as err:
+            raise NotImplementedError("Please install yoda to enable this feature.")
+
+        yoda_histos = []
+        for name, histo in self._histograms.items():
+            yoda_histos.append(yoda.Histo1D(f"/madanalysis5/{name}"))
+            yoda_histos[-1].addBins(histo.bins)
+            for idx in range(len(histo.bins)-1):
+                yoda_histos[-1].fillBin(
+                    idx, weight=histo.weights[idx], fraction=histo._normEwEntries
+                )
+
+        if save.endswith(".yoda"):
+            yoda.write(yoda_histos, save)
+
+        return yoda_histos
 
     @staticmethod
     def _readHistos(fileLoc: Text) -> MutableSequence[dict]:
