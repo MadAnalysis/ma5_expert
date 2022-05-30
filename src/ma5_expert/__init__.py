@@ -10,5 +10,6 @@ log = logging.getLogger("ma5_expert")
 log.setLevel(logging.INFO)
 
 from ma5_expert import cutflow
+from ma5_expert import histogram
 
 __all__ = cutflow.__all__
