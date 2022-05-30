@@ -1,5 +1,6 @@
 import math
 import os
+import io
 
 from ma5_expert.tools.FoM import FoM
 from .reader import Collection
@@ -98,8 +99,8 @@ class CutFlowTable:
         finalMCunc = kwargs.get("finalMCunc", False)
 
         TeX = None
-        if any([x for x in args if isinstance(x, file)]):
-            TeX = [x for x in args if isinstance(x, file)][0]
+        if any([x for x in args if isinstance(x, io.TextIOBase)]):
+            TeX = [x for x in args if isinstance(x, io.TextIOBase)][0]
             TeX.write(
                 r"\documentclass[12pt]{article}"
                 + "\n"
