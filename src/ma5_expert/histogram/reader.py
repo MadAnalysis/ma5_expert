@@ -21,12 +21,12 @@ class Collection:
         exact path to MadAnalysis histogram output
     """
 
-    lumi: float
-    original_file: str
-    xsection: float
+    original_file: Text
+    _histograms: OrderedDict = field(default_factory=OrderedDict, init=False, repr=False)
+    xsection: float = field(default=1.0, init=True)
+    lumi: float = field(default=1e-3, init=True)
 
     def __post_init__(self) -> None:
-        self._histograms = OrderedDict()
         rows = self._readHistos(self.original_file)
         for idx in np.unique([r["ID"] for r in rows]):
             current_histo = Histogram()
@@ -36,26 +36,9 @@ class Collection:
             self.append(current_histo)
 
     @property
-    def xsection(self) -> float:
-        """Cross-section value in pb"""
-        return self._xsection
-
-    @xsection.setter
-    def xsection(self, value: float):
-        if value <= 0.0:
-            raise ValueError("Cross section value can not be less or equal to zero.")
-        self._xsection = value
-
-    @property
     def luminosity(self) -> float:
         """Luminosity value in 1/fb"""
-        return self._lumi
-
-    @luminosity.setter
-    def luminosity(self, value: float):
-        if value <= 0.0:
-            raise ValueError("Luminosity value can not be less or equal to zero.")
-        self._lumi = value
+        return self.lumi
 
     def set_weight_normalisation(self, sumW: float) -> None:
         """

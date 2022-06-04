@@ -1,5 +1,5 @@
 import numpy as np
-
+from copy import deepcopy
 from .bin import Bin
 from typing import Text, Union, MutableSequence
 from dataclasses import dataclass, field
@@ -17,7 +17,7 @@ class Histogram:
     regions: MutableSequence[str] = field(default_factory=list, init=False)
     _nEvents: int = field(default=0, init=False, repr=False)
     _normEwEvents: float = field(init=False, default=0.0, repr=False)
-    _nEntries: int = field(init=False, default=0, repr=False)
+    _nEntries: float = field(init=False, default=0.0, repr=False)
     _normEwEntries: float = field(init=False, default=0, repr=False)
     _sumWeightsSq: float = field(init=False, default=0, repr=False)
     _sumValWeight: float = field(init=False, default=0, repr=False)
@@ -47,7 +47,7 @@ class Histogram:
 
     @property
     def size(self):
-        return self._nbins
+        return len(self._bins)
 
     def _add_bin(self, bin_info: dict) -> None:
         """
@@ -63,7 +63,7 @@ class Histogram:
         AssertionError:
             If the histogram name and ID information does not match the info can not be added.
         """
-        if self.ID == -1 and self.name == "__unknown_histo__":
+        if self.ID == -1 and self.name == "__unknown_histo__" and len(self._bins) == 0:
             self.ID = int(bin_info["ID"])
             self.name = bin_info["name"]
             self._nbins = int(bin_info["nbins"])
@@ -77,33 +77,77 @@ class Histogram:
             self._sumValSqWeight = float(bin_info["sumValSqWeight"])
             self._xmin = float(bin_info["xmin"])
             self._xmax = float(bin_info["xmax"])
-            self._bins.append(
-                Bin(
+
+            bin_min, bin_max = np.linspace(self._xmin, self._xmax, self._nbins + 1)[:2]
+
+            isFlow = bin_info["isUnderflow"] or bin_info["isOverflow"]
+
+            if bin_info["isUnderflow"]:
+                self._underflow = Bin(
                     sumW=float(bin_info["value"]),
                     isUnderflow=bin_info["isUnderflow"],
                     isOverflow=bin_info["isOverflow"],
+                    min=bin_min if not isFlow else -1,
+                    max=bin_max if not isFlow else -1,
                 )
-            )
+            elif bin_info["isOverflow"]:
+                self._overflow = Bin(
+                    sumW=float(bin_info["value"]),
+                    isUnderflow=bin_info["isUnderflow"],
+                    isOverflow=bin_info["isOverflow"],
+                    min=bin_min if not isFlow else -1,
+                    max=bin_max if not isFlow else -1,
+                )
+            else:
+                self._bins.append(
+                    Bin(
+                        sumW=float(bin_info["value"]),
+                        isUnderflow=bin_info["isUnderflow"],
+                        isOverflow=bin_info["isOverflow"],
+                        min=bin_min if not isFlow else -1,
+                        max=bin_max if not isFlow else -1,
+                    )
+                )
 
         else:
             assert (
                 self.ID == int(bin_info["ID"]) and self.name == bin_info["name"]
             ), "Merging different types of histograms are not allowed."
-            self._bins.append(
-                Bin(
+
+            if bin_info["isUnderflow"]:
+                self._underflow = Bin(
                     sumW=float(bin_info["value"]),
                     isUnderflow=bin_info["isUnderflow"],
                     isOverflow=bin_info["isOverflow"],
+                    min=-1,
+                    max=-1,
                 )
-            )
+            elif bin_info["isOverflow"]:
+                self._overflow = Bin(
+                    sumW=float(bin_info["value"]),
+                    isUnderflow=bin_info["isUnderflow"],
+                    isOverflow=bin_info["isOverflow"],
+                    min=-1,
+                    max=-1,
+                )
+            else:
+                if len(self._bins) == 0:
+                    bin_min, bin_max = np.linspace(self._xmin, self._xmax, self._nbins + 1)[:2]
+                else:
+                    bin_min, bin_max = self._bins[-1].max, self._bins[-1].max + self._bins[-1].width
+                self._bins.append(
+                    Bin(
+                        sumW=float(bin_info["value"]),
+                        isUnderflow=bin_info["isUnderflow"],
+                        isOverflow=bin_info["isOverflow"],
+                        min=bin_min,
+                        max=bin_max,
+                    )
+                )
 
     def _w(self, weight: float):
         return np.array(
-            [
-                b.eff(self.weight_normalisation) * weight
-                for b in self._bins
-                if not (b.isOverflow or b.isUnderflow)
-            ],
+            [b.eff(self.weight_normalisation) * weight for b in self._bins],
             dtype=np.float32,
         )
 
@@ -141,13 +185,19 @@ class Histogram:
     @property
     def bins(self) -> np.ndarray:
         """Get upper and lower limits of binned histogram"""
-        return np.linspace(self._xmin, self._xmax, self.size + 1)
+        return np.array([self._bins[0].min, self._bins[0].max] + [b.max for b in self._bins[1:]])
 
     @property
     def xbins(self) -> np.ndarray:
         """Get central location of each bin"""
-        bins = self.bins
-        return np.array(
-            [bins[idx] + (bins[idx + 1] - bins[idx]) / 2.0 for idx in range(len(bins) - 1)],
-            dtype=np.float32,
-        )
+        return np.array([b.center for b in self._bins])
+
+    def merge_tail(self, nbins: int) -> None:
+        last_bin = self._bins[-1]
+        bins = deepcopy(self._bins)
+        for idx in range(self.size - 2, self.size - 1 - nbins, -1):
+            last_bin = last_bin + self._bins[idx]
+            bins.remove(self._bins[idx])
+        bins[-1] = last_bin
+        self._bins = bins
+
