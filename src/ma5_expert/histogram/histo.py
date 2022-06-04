@@ -1,49 +1,31 @@
 import numpy as np
 
 from .bin import Bin
-from typing import Sequence, Text, Union, MutableSequence
+from typing import Text, Union
+from dataclasses import dataclass, field
 
 
+@dataclass
 class Histo:
     """
-    Object oriented Histogram definition
+    Object-oriented Histogram definition
     """
 
-    name: Text
-    ID: int
-    _nbins: int
-    regions: Sequence[Text]
-    _nEvents: int
-    _normEwEvents: float
-    _nEntries: float
-    _normEwEntries: float
-    _sumWeightsSq: float
-    _sumValWeight: float
-    _sumValSqWeight: float
-    _xmin: float
-    _xmax: float
-    _bins: MutableSequence[Bin]
-    _normalisation_frac: Union[float, Text]
-
-    def __init__(self):
-        self.ID = -1
-        self.name = "__unknown_histo__"
-        self._nbins = 0
-        self.regions = []
-        self._nEvents = 0
-        self._normEwEvents = 0
-        self._nEntries = 0
-        self._normEwEntries = 0
-        self._sumWeightsSq = 0
-        self._sumValWeight = 0
-        self._sumValSqWeight = 0
-        self._xmin = 0
-        self._xmax = 0
-        self._bins = []
-        self._normalisation_frac = "_normEwEvents"
-
-    def __repr__(self):
-        return f"MadAnalysis 5 Histogram: {self.name}"
+    name: str = field(default="__unknown_histo__", init=False)
+    ID: int = field(default=-1, repr=False, init=False)
+    _nbins: int = field(default=0, repr=False, init=False)
+    regions: list[str] = field(default_factory=list, init=False)
+    _nEvents: int = field(default=0, init=False, repr=False)
+    _normEwEvents: float = field(init=False, default=0.0, repr=False)
+    _nEntries: int = field(init=False, default=0, repr=False)
+    _normEwEntries: float = field(init=False, default=0, repr=False)
+    _sumWeightsSq: float = field(init=False, default=0, repr=False)
+    _sumValWeight: float = field(init=False, default=0, repr=False)
+    _sumValSqWeight: float = field(init=False, default=0, repr=False)
+    _xmin: float = field(init=False, default=0, repr=False)
+    _xmax: float = field(init=False, default=0, repr=False)
+    _bins: list[Bin] = field(default_factory=list, init=False, repr=False)
+    _normalisation_frac: Union[float, Text] = field(init=False, default="_normEwEvents", repr=False)
 
     @property
     def weight_normalisation(self) -> float:
