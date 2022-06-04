@@ -96,7 +96,11 @@ class Histo:
             self._xmin = float(bin_info["xmin"])
             self._xmax = float(bin_info["xmax"])
             self._bins.append(
-                Bin(float(bin_info["value"]), bin_info["isUnderflow"], bin_info["isOverflow"])
+                Bin(
+                    sumW=float(bin_info["value"]),
+                    isUnderflow=bin_info["isUnderflow"],
+                    isOverflow=bin_info["isOverflow"],
+                )
             )
 
         else:
@@ -104,7 +108,11 @@ class Histo:
                 self.ID == int(bin_info["ID"]) and self.name == bin_info["name"]
             ), "Merging different types of histograms are not allowed."
             self._bins.append(
-                Bin(float(bin_info["value"]), bin_info["isUnderflow"], bin_info["isOverflow"])
+                Bin(
+                    sumW=float(bin_info["value"]),
+                    isUnderflow=bin_info["isUnderflow"],
+                    isOverflow=bin_info["isOverflow"],
+                )
             )
 
     def _w(self, weight: float):
