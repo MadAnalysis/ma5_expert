@@ -2,8 +2,8 @@
 [![EPJC](https://img.shields.io/static/v1?style=plastic&label=DOI&message=10.1140/epjc/s10052-021-09052-5&color=blue)](https://doi.org/10.1140/epjc/s10052-021-09052-5)
 [![arxiv](https://img.shields.io/static/v1?style=plastic&label=arXiv&message=2006.09387&color=brightgreen)](https://arxiv.org/abs/2006.09387)
 
- MadAnalysis 5 output interpreter for expert mode. Parses the cutflow collection and 
- constructs it with an interactable interface (histogram interpreter coming soon). 
+ MadAnalysis 5 output interpreter for expert mode. Parses the cutflow and histogram collections and 
+ constructs it with an interactable interface. 
 
 ## Installation
 `pip install ma5-expert`
