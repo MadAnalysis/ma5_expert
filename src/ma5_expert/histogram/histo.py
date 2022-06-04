@@ -1,12 +1,12 @@
 import numpy as np
 
 from .bin import Bin
-from typing import Text, Union
+from typing import Text, Union, MutableSequence
 from dataclasses import dataclass, field
 
 
 @dataclass
-class Histo:
+class Histogram:
     """
     Object-oriented Histogram definition
     """
@@ -14,7 +14,7 @@ class Histo:
     name: str = field(default="__unknown_histo__", init=False)
     ID: int = field(default=-1, repr=False, init=False)
     _nbins: int = field(default=0, repr=False, init=False)
-    regions: list[str] = field(default_factory=list, init=False)
+    regions: MutableSequence[str] = field(default_factory=list, init=False)
     _nEvents: int = field(default=0, init=False, repr=False)
     _normEwEvents: float = field(init=False, default=0.0, repr=False)
     _nEntries: int = field(init=False, default=0, repr=False)
@@ -24,7 +24,7 @@ class Histo:
     _sumValSqWeight: float = field(init=False, default=0, repr=False)
     _xmin: float = field(init=False, default=0, repr=False)
     _xmax: float = field(init=False, default=0, repr=False)
-    _bins: list[Bin] = field(default_factory=list, init=False, repr=False)
+    _bins: MutableSequence[Bin] = field(default_factory=list, init=False, repr=False)
     _normalisation_frac: Union[float, Text] = field(init=False, default="_normEwEvents", repr=False)
 
     @property

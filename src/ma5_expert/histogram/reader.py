@@ -2,12 +2,12 @@ import os, re
 import numpy as np
 from decimal import Decimal
 from typing import Text, MutableSequence, Union, Iterable, Tuple, Optional
-
+from dataclasses import dataclass, field
 from collections import OrderedDict
+from .histo import Histogram
 
-from .histo import Histo
 
-
+@dataclass
 class Collection:
     """
     Histogram collection
@@ -17,21 +17,19 @@ class Collection:
         Cross-section value in pb
     lumi: float
         Luminosity value in 1/fb
-    fileLoc: Text
+    original_file: Text
         exact path to MadAnalysis histogram output
     """
 
-    histograms: MutableSequence[Histo]
+    lumi: float
+    original_file: str
+    xsection: float
 
-    def __init__(self, fileLoc: Text, xsection: float, lumi: float) -> None:
+    def __post_init__(self) -> None:
         self._histograms = OrderedDict()
-        self.xsection = xsection
-        self.luminosity = lumi
-        self.original_file = fileLoc
-
-        rows = self._readHistos(fileLoc)
+        rows = self._readHistos(self.original_file)
         for idx in np.unique([r["ID"] for r in rows]):
-            current_histo = Histo()
+            current_histo = Histogram()
             for hbin in rows:
                 if hbin["ID"] == idx:
                     current_histo._add_bin(hbin)
@@ -59,12 +57,6 @@ class Collection:
             raise ValueError("Luminosity value can not be less or equal to zero.")
         self._lumi = value
 
-    def __repr__(self) -> Text:
-        txt = f"Collection of {self.size} histograms from {os.path.dirname(self.original_file)}\n"
-        for key, item in self.items():
-            txt += "   * " + item.__repr__() + "\n"
-        return txt
-
     def set_weight_normalisation(self, sumW: float) -> None:
         """
         Set weight normalisation to sum of weights
@@ -76,8 +68,8 @@ class Collection:
         for key, item in self.items():
             item.weight_normalisation = sumW
 
-    def append(self, histogram: Histo):
-        assert isinstance(histogram, Histo), "Wrong type of input."
+    def append(self, histogram: Histogram):
+        assert isinstance(histogram, Histogram), "Wrong type of input."
         if histogram.name in self.histo_names:
             raise ValueError("Histogram already exists.")
         self._histograms.update({histogram.name: histogram})
@@ -91,14 +83,14 @@ class Collection:
         """Number of histograms"""
         return len(self.histo_names)
 
-    def __getitem__(self, item: Union[Text, int]) -> Histo:
+    def __getitem__(self, item: Union[Text, int]) -> Histogram:
         if isinstance(item, int):
             if item < self.size:
                 return self._histograms[self.histo_names[item]]
             else:
                 raise ValueError("Input can not be larger than number of histograms.")
 
-        return self._histograms.get(item, Histo())
+        return self._histograms.get(item, Histogram())
 
     def items(self) -> Iterable:
         return self._histograms.items()
@@ -179,7 +171,7 @@ class Collection:
         for name, histo in self._histograms.items():
             yoda_histos.append(yoda.Histo1D(f"/madanalysis5/{name}"))
             yoda_histos[-1].addBins(histo.bins)
-            for idx in range(len(histo.bins)-1):
+            for idx in range(len(histo.bins) - 1):
                 yoda_histos[-1].fillBin(
                     idx, weight=histo.weights[idx], fraction=histo._normEwEntries
                 )
