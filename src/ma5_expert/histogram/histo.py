@@ -127,6 +127,7 @@ class Histo:
 
     @property
     def weights(self) -> np.ndarray:
+        """Get weights of the histogram"""
         return self._w(1.0)
 
     def norm_weights(self, xsec: float) -> np.ndarray:
@@ -157,8 +158,14 @@ class Histo:
 
     @property
     def bins(self) -> np.ndarray:
+        """Get upper and lower limits of binned histogram"""
         return np.linspace(self._xmin, self._xmax, self.size + 1)
 
     @property
     def xbins(self) -> np.ndarray:
-        return np.linspace(self._xmin, self._xmax, self.size)
+        """Get central location of each bin"""
+        bins = self.bins
+        return np.array(
+            [bins[idx] + (bins[idx + 1] - bins[idx]) / 2.0 for idx in range(len(bins) - 1)],
+            dtype=np.float32,
+        )
