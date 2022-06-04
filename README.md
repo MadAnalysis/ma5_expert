@@ -202,11 +202,11 @@ Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 
 ## TODO
 
-- [ ] Clean cutflow reader needs optimization and clarity
+- [x] Clean cutflow reader needs optimization and clarity
 
 - [x] Generalize table writer and add latex writer
 
-- [ ] Histogram reader
+- [x] Histogram reader
 
 - [ ] Overall Ma5 Analysis parser
 

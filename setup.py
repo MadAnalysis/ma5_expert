@@ -12,7 +12,7 @@ if os.path.isfile("./requirements.txt"):
 
 setup(
     name="ma5_expert",
-    version="2.0.0",
+    version="2.0.1",
     description=("MadAnalysis 5 interpreter for Expert mode"),
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,13 +20,13 @@ setup(
     project_urls={
         "Bug Tracker": "https://github.com/MadAnalysis/ma5_expert/issues",
     },
-    download_url = "https://github.com/MadAnalysis/ma5_expert/archive/refs/tags/v2.0.0.tar.gz",
+    download_url = "https://github.com/MadAnalysis/ma5_expert/archive/refs/tags/v2.0.1.tar.gz",
     author="Jack Y. Araz",
     author_email=("jack.araz@durham.ac.uk"),
     license="MIT",
     package_dir={"": "src"},
     install_requires=requirements,
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     classifiers=[
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
