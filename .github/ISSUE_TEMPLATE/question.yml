@@ -1,0 +1,29 @@
+name: Question
+description: Have a question about MadAnalysis 5? Let us help!
+labels: "question"
+
+body:
+  - type: markdown
+    id: description
+    attributes:
+      value: |
+        ## Before posting a question
+        **Note that this is not MadAnalysis 5 repository, prease refer to [this link](https://github.com/MadAnalysis/madanalysis5/issues) for questions regarding MadAnalysis 5 Software**
+          
+        If your question involves software issues, please include your system settings as shown below;
+        
+        **System Settings:**
+
+        - Operating system: (e.g. macOS v12.1)
+        - Python version: (print the output of `python --version`)
+        - MadAnalysis 5 version: (print the output of `./bin/ma5 --version`)
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: |
+        How can we help?
+        
+        * **Please use [Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).**
+    validations:
+      required: true

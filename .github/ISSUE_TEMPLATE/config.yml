@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: How to cite MadAnalysis 5
+    url: https://github.com/MadAnalysis/madanalysis5#credits
+    about: See the list of publications for different stages of development.
+  - name: How to contribute to MadAnalysis 5
+    url: https://github.com/MadAnalysis/madanalysis5/blob/main/doc/CONTRIBUTING.md
+    about: Guidelines for contributing to MadAnalysis 5 software.
