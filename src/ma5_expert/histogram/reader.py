@@ -35,6 +35,12 @@ class Collection:
                     current_histo._add_bin(hbin)
             self.append(current_histo)
 
+    def __str__(self) -> Text:
+        txt = f"Collection of {len(self.histo_names)} histograms from `{self.original_file}`"
+        for key, item in self._histograms.items():
+            txt += "\n   * " + str(item)
+        return txt
+
     @property
     def luminosity(self) -> float:
         """Luminosity value in 1/fb"""

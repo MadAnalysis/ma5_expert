@@ -27,6 +27,11 @@ class Histogram:
     _bins: MutableSequence[Bin] = field(default_factory=list, init=False, repr=False)
     _normalisation_frac: Union[float, Text] = field(init=False, default="_normEwEvents", repr=False)
 
+    def __str__(self) -> Text:
+        return (
+            f"{self.name}: [ nbin: {self.size:.0f}, min: {self._xmin:.2f}, max: {self._xmax:.2f} ]"
+        )
+
     @property
     def weight_normalisation(self) -> float:
         """
@@ -71,10 +76,12 @@ class Histogram:
             self._nEvents = int(bin_info["nEvents"])
             self._normEwEvents = float(bin_info["normEwEvents"])
             self._nEntries = int(bin_info["nEntries"])
-            self._normEwEntries = float(bin_info["normEwEntries"]) # sum of event-weights over entries
-            self._sumWeightsSq = float(bin_info["sumWeightsSq"]) # sum weights^2
-            self._sumValWeight = float(bin_info["sumValWeight"]) # sum value*weight
-            self._sumValSqWeight = float(bin_info["sumValSqWeight"]) # sum value^2*weight
+            self._normEwEntries = float(
+                bin_info["normEwEntries"]
+            )  # sum of event-weights over entries
+            self._sumWeightsSq = float(bin_info["sumWeightsSq"])  # sum weights^2
+            self._sumValWeight = float(bin_info["sumValWeight"])  # sum value*weight
+            self._sumValSqWeight = float(bin_info["sumValSqWeight"])  # sum value^2*weight
             self._xmin = float(bin_info["xmin"])
             self._xmax = float(bin_info["xmax"])
 
@@ -200,4 +207,3 @@ class Histogram:
             bins.remove(self._bins[idx])
         bins[-1] = last_bin
         self._bins = bins
-

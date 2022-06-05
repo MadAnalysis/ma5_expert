@@ -158,13 +158,13 @@ collection = ma5.histogram.Collection(
 )
 
 print(collection)
-# Collection of 6 histograms from examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms
-#    * MadAnalysis 5 Histogram: SRA_Meff
-#    * MadAnalysis 5 Histogram: SRA_Mh
-#    * MadAnalysis 5 Histogram: SRB_PTj1
-#    * MadAnalysis 5 Histogram: SRB_MhAvg
-#    * MadAnalysis 5 Histogram: SRC_MET
-#    * MadAnalysis 5 Histogram: SRC_Sig
+# Collection of 6 histograms from `examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf`
+#    * SRA_Meff: [ nbin: 11, min: 800.00, max: 3000.00 ]
+#    * SRA_Mh: [ nbin: 12, min: 0.00, max: 480.00 ]
+#    * SRB_PTj1: [ nbin: 9, min: 50.00, max: 950.00 ]
+#    * SRB_MhAvg: [ nbin: 16, min: 50.00, max: 450.00 ]
+#    * SRC_MET: [ nbin: 13, min: 200.00, max: 1500.00 ]
+#    * SRC_Sig: [ nbin: 19, min: 17.00, max: 36.00 ]
 ```
 
 Extract the plotting information:
