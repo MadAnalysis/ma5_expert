@@ -17,7 +17,7 @@ class Histogram:
     regions: MutableSequence[str] = field(default_factory=list, init=False)
     _nEvents: int = field(default=0, init=False, repr=False)
     _normEwEvents: float = field(init=False, default=0.0, repr=False)
-    _nEntries: float = field(init=False, default=0.0, repr=False)
+    _nEntries: int = field(init=False, default=0, repr=False)
     _normEwEntries: float = field(init=False, default=0, repr=False)
     _sumWeightsSq: float = field(init=False, default=0, repr=False)
     _sumValWeight: float = field(init=False, default=0, repr=False)
@@ -70,11 +70,11 @@ class Histogram:
             self.regions = bin_info["region"]
             self._nEvents = int(bin_info["nEvents"])
             self._normEwEvents = float(bin_info["normEwEvents"])
-            self._nEntries = float(bin_info["normEwEvents"])
-            self._normEwEntries = float(bin_info["normEwEntries"])
-            self._sumWeightsSq = float(bin_info["sumWeightsSq"])
-            self._sumValWeight = float(bin_info["sumValWeight"])
-            self._sumValSqWeight = float(bin_info["sumValSqWeight"])
+            self._nEntries = int(bin_info["nEntries"])
+            self._normEwEntries = float(bin_info["normEwEntries"]) # sum of event-weights over entries
+            self._sumWeightsSq = float(bin_info["sumWeightsSq"]) # sum weights^2
+            self._sumValWeight = float(bin_info["sumValWeight"]) # sum value*weight
+            self._sumValSqWeight = float(bin_info["sumValSqWeight"]) # sum value^2*weight
             self._xmin = float(bin_info["xmin"])
             self._xmax = float(bin_info["xmax"])
 

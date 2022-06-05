@@ -227,7 +227,7 @@ class Collection:
                 # usually this means the SAF header or footer
                 if readState == NONHISTO:
                     if re.search("<Histo>", l):
-                        ID = ID + 1
+                        ID += 1
                         row["ID"] = ID
                         readState = HISTO
                 # A <Histo> tag can contain <Description>, <Statistics>, or <Data>
@@ -236,6 +236,7 @@ class Collection:
                 elif readState == HISTO:
                     if re.search("</Histo>", l):
                         readState = NONHISTO
+                        row = {}
                     elif re.search("<Description>", l):
                         readState = DESC
                         # need to reset the line # of the description
