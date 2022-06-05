@@ -17,6 +17,7 @@ body:
         - Operating system: (e.g. macOS v12.1)
         - Python version: (print the output of `python --version`)
         - MadAnalysis 5 version: (print the output of `./bin/ma5 --version`)
+        - `ma5-expert` version (print the output of `python -m pip list | grep ma5-expert`)
   - type: textarea
     id: question
     attributes:
