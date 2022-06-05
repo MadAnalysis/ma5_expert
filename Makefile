@@ -1,6 +1,8 @@
 .PHONY: all
 all:
 	make install
+	python -m pip install pytest
+	make test
 
 
 .PHONY: install
@@ -11,6 +13,10 @@ install:
 .PHONY: uninstall
 uninstall:
 	pip uninstall ma5_expert
+
+.PHONY: test
+test:
+	pytest tests/.
 
 
 .PHONY: build
