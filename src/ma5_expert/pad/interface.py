@@ -1,10 +1,12 @@
 from ma5_expert.backend import PADType, BackendManager
 from ma5_expert.system.exceptions import PADException, InvalidSamplePath, BackendException
-from typing import Text, Dict, Optional, Callable, MutableSequence
+from typing import Text, Dict, Optional, Callable, MutableSequence, List
 import os
 from dataclasses import dataclass
 
-CustomCutFlowReader = Callable[[Text, MutableSequence, Dict], Dict]
+CustomCutFlowReader = Callable[
+    [Text, MutableSequence, Dict[Text, Dict[Text, float]]], Dict[Text, Dict[Text, float]]
+]
 
 
 @dataclass
@@ -73,6 +75,11 @@ class PADInterface:
         run_recast = BackendManager.MadAnalysis5.get_run_recast(self.sample_path, padtype)
 
         ET = run_recast.check_xml_scipy_methods()
+
+        lumi: float
+        regions: List[Text]
+        regiondata: Dict[Text, Dict[Text, float]]
+
         lumi, regions, regiondata = run_recast.parse_info_file(
             ET, analysis, "default" if luminosity is None else luminosity
         )
