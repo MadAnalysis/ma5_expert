@@ -1,7 +1,7 @@
 from .ma5_backend import MadAnalysisBackend, PADType
 
 
-class Backend:
+class BackendManager:
     MadAnalysis5 = None
 
     @staticmethod
@@ -24,13 +24,10 @@ class Backend:
         enforce_padforsfs: Optional[bool]
             Enforce PADForSFS. Note that this assumes that PADForSFS is installed.
         """
-        Backend.MadAnalysis5 = MadAnalysisBackend(
+        BackendManager.MadAnalysis5 = MadAnalysisBackend(
             madanalysis_path,
             debug_mode,
             dev_mode,
             enforce_pad,
             enforce_padforsfs,
         )
-
-
-__all__ = ["PADType", "Backend"]

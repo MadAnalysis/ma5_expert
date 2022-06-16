@@ -1,3 +1,3 @@
-from .exclusion_computer import compute_exclusion
+from .interface import PADInterface
 
-__all__ = ["compute_exclusion"]
+__all__ = ["PADInterface"]

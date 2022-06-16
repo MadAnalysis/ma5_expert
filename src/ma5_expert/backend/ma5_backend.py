@@ -14,7 +14,7 @@ class PADType(Enum):
 @dataclass
 class MadAnalysisBackend:
     """
-    Sets MadAnalysis 5 Backend
+    Sets MadAnalysis 5 BackendManager
 
     madanalysis_path: str
         MadAnalysis 5 path
