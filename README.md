@@ -22,7 +22,7 @@
  * Possibility to include experimentally available cutflow data and compare it against MadAnalysis 5 cutflow output.
  * Calculate Monte Carlo uncertainty per cut on the fly
  
-Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/examples).
+Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/docs/examples).
 
 * Simple cutflow:
 
@@ -31,11 +31,13 @@ We provide an ma5 directory in `examples` folder so we will go through and the c
 Parsing a cutflow simply requires the path of the `CutFlows` folder and optionally `xsection` [pb], `lumi` [1/fb]
 and/or `Nevents`. Note that `xsec` overwrites the number of events option, if provided number of events
 are always calculated using the cross section.
+
 ```python
 import ma5_expert as ma5
+
 sample = ma5.cutflow.Collection(
-    "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Cutflows",
-    xsection=5.689, lumi=139.
+        "docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Cutflows",
+        xsection = 5.689, lumi = 139.
 )
 ```
 Here the first input is the path of the `CutFlows` folder and the rest are simply cross section and 
@@ -152,9 +154,10 @@ where all properties shown above applies to this new object as well.
 
 ```python
 import ma5_expert as ma5
+
 collection = ma5.histogram.Collection(
-    "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf", 
-    xsection=5.689, lumi=139.
+        "docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf",
+        xsection = 5.689, lumi = 139.
 )
 
 print(collection)
@@ -177,7 +180,7 @@ plt.xlim([min(bins), max(bins)])
 plt.show()
 ```
 <p align="center">
-<img src="./examples/SRA_Mh.png" alt="SRA_Mh" style="width:400px;"/>
+<img src="docs/examples/SRA_Mh.png" alt="SRA_Mh" style="width:400px;"/>
 </p>
 
 ### Citation 
