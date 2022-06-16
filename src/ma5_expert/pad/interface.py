@@ -1,8 +1,10 @@
 from ma5_expert.backend import PADType, BackendManager
 from ma5_expert.system.exceptions import PADException, InvalidSamplePath, BackendException
-from typing import Text, Dict, Optional
+from typing import Text, Dict, Optional, Callable, MutableSequence
 import os
 from dataclasses import dataclass
+
+CustomCutFlowReader = Callable[[Text, MutableSequence, Dict], Dict]
 
 
 @dataclass
@@ -31,7 +33,12 @@ class PADInterface:
             )
 
     def compute_exclusion(
-        self, analysis: Text, xsection: float, padtype: PADType, luminosity: Optional[float] = None
+        self,
+        analysis: Text,
+        xsection: float,
+        padtype: PADType,
+        luminosity: Optional[float] = None,
+        custom_cutflow_reader: Optional[CustomCutFlowReader] = None,
     ) -> Dict:
         """
         Compute exclusion limit
@@ -46,7 +53,9 @@ class PADInterface:
             Indicates the detector backend of the analysis
         luminosity: Optional[float]
             if none, default value will be used.
-
+        custom_cutflow_reader: Callable
+            A user defined function that takes cutflow path, list of regions and region data
+            and returns updated region data.
 
         Returns
         -------
@@ -84,12 +93,16 @@ class PADInterface:
         cutflow_path = os.path.join(
             self.sample_path, "Output/SAF", self.dataset_name, analysis, "Cutflows"
         )
-        regiondata = run_recast.read_cutflows(cutflow_path, regions, regiondata)
-        if regiondata == -1:
-            raise PADException(
-                msg=f"Problem occured during parsing the cutflows. please check: {cutflow_path}",
-                details={"cutflow_path": cutflow_path},
-            )
+
+        if custom_cutflow_reader is not None:
+            regiondata = custom_cutflow_reader(cutflow_path, regions, regiondata)
+        else:
+            regiondata = run_recast.read_cutflows(cutflow_path, regions, regiondata)
+            if regiondata == -1:
+                raise PADException(
+                    msg=f"Problem occured during parsing the cutflows. please check: {cutflow_path}",
+                    details={"cutflow_path": cutflow_path},
+                )
 
         regiondata = run_recast.extract_sig_cls(regiondata, regions, lumi, "exp")
         if run_recast.cov_config != {}:
