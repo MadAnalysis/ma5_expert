@@ -2,7 +2,7 @@
 
 ## New features since last release
   * Complete interface with PAD in order to run exclusion limits externally
-    through MadAnalysis interface ([#x]())
+    through MadAnalysis interface ([#7](https://github.com/MadAnalysis/ma5_expert/pull/7)).
 
 ## Improvements
  
