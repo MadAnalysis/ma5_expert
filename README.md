@@ -14,6 +14,8 @@
 * [Integration to Public Analysis Database through MadAnalysis](#integration-to-public-analysis-database-through-madanalysis)
 * [Citation](#citation)
 
+Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/docs/examples).
+
 ### Cutflow Collection
 
  * Parse all the signal regions and construct an object-base, interactable cutflow.
@@ -22,8 +24,7 @@
  * Compare signal and background samples and calculate the figure of merit.
  * Possibility to include experimentally available cutflow data and compare it against MadAnalysis 5 cutflow output.
  * Calculate Monte Carlo uncertainty per cut on the fly
- 
-Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/docs/examples).
+
 
 * Simple cutflow:
 
