@@ -11,6 +11,7 @@
 ## Outline
 * [Cutflow Collection](#cutflow-collection)
 * [Histogram Collection](#histogram-collection)
+* [Integration to Public Analysis Database through MadAnalysis](#integration-to-public-analysis-database-through-madanalysis)
 * [Citation](#citation)
 
 ### Cutflow Collection
@@ -148,6 +149,8 @@ ATLAS.addSignalRegion('SRA_H', ma5.SRA_H.CutNames, SRA_presel+[7.0])
 ```
 where all properties shown above applies to this new object as well.
 
+[back to top](#outline)
+
 ### Histogram Collection
 
 * Parse all the histograms available in the `Histos.saf` file into interactable histogram object.
@@ -183,6 +186,36 @@ plt.show()
 <img src="docs/examples/SRA_Mh.png" alt="SRA_Mh" style="width:400px;"/>
 </p>
 
+[back to top](#outline)
+
+### Integration to Public Analysis Database through MadAnalysis 5
+
+`ma5-expert` is capable of running MadAnalysis sub-modules through a backend manager. Desired MadAnalysis 
+backend can be set via
+```python
+import ma5_expert as ma5
+ma5.BackendManager.set_madanalysis_backend("/PATH/TO/MADANALYSIS5")
+```
+This will initiate the MadAnalysis backend to be used. Then one can use the reinterpretation tools such as 
+exclusion limit computation, externally. One can initiate PAD interface via
+```python
+interface = ma5.pad.PADInterface(
+    sample_path="ma5_expert/docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689",
+    dataset_name="defaultset"
+)
+```
+where `sample_path` is the main location of the analysis which has been held, and `dataset_name` is the name
+of the dataset which corresponds to the particular folder name under `sample_path + /Outputs/SAF/`. Then results
+can be computed via
+```python
+results = interface.compute_exclusion("atlas_susy_2018_31", 5.689, ma5.backend.PADType.PADForSFS)
+```
+Note that the given example only computes for `atlas_susy_2018_31` and this analysis has been held under `PADForSFS`
+which is indicated via `PADType`. This simply tells function where to look to find corresponding info file, which 
+assumes that `PADForSFS` has been installed. The value `5.689` sets the cross section in pb. 
+
+[back to top](#outline)
+
 ### Citation 
 Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 
@@ -202,21 +235,9 @@ Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 }
 ```
 
-
+[back to top](#outline)
 ## TODO
 
-- [x] Clean cutflow reader needs optimization and clarity
-
-- [x] Generalize table writer and add latex writer
-
-- [x] Histogram reader
-
 - [ ] Overall Ma5 Analysis parser
-
-- [x] Some experimental analysis requires MC event comparison table. This needs to be added.
-
-- [x] Combine collections with + operator and normalize to a certain luminosity with * operator.
-
-- [x] Add MC uncertainties
 
 - [ ] Add theoretical uncertainties
