@@ -2,7 +2,7 @@ import ma5_expert as ma5
 import numpy as np
 
 histo_file = (
-    "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/"
+    "docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/"
     "SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf"
 )
 
