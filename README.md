@@ -13,7 +13,10 @@
 ## Outline
 * [Cutflow Collection](#cutflow-collection)
 * [Histogram Collection](#histogram-collection)
+* [Integration to Public Analysis Database through MadAnalysis](#integration-to-public-analysis-database-through-madanalysis)
 * [Citation](#citation)
+
+Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/docs/examples).
 
 ### Cutflow Collection
 
@@ -23,8 +26,7 @@
  * Compare signal and background samples and calculate the figure of merit.
  * Possibility to include experimentally available cutflow data and compare it against MadAnalysis 5 cutflow output.
  * Calculate Monte Carlo uncertainty per cut on the fly
- 
-Examples can be found in [examples folder](https://github.com/jackaraz/ma5_expert/tree/master/examples).
+
 
 * Simple cutflow:
 
@@ -33,11 +35,13 @@ We provide an ma5 directory in `examples` folder so we will go through and the c
 Parsing a cutflow simply requires the path of the `CutFlows` folder and optionally `xsection` [pb], `lumi` [1/fb]
 and/or `Nevents`. Note that `xsec` overwrites the number of events option, if provided number of events
 are always calculated using the cross section.
+
 ```python
 import ma5_expert as ma5
+
 sample = ma5.cutflow.Collection(
-    "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Cutflows",
-    xsection=5.689, lumi=139.
+        "docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Cutflows",
+        xsection = 5.689, lumi = 139.
 )
 ```
 Here the first input is the path of the `CutFlows` folder and the rest are simply cross section and 
@@ -148,15 +152,18 @@ ATLAS.addSignalRegion('SRA_H', ma5.SRA_H.CutNames, SRA_presel+[7.0])
 ```
 where all properties shown above applies to this new object as well.
 
+[back to top](#outline)
+
 ### Histogram Collection
 
 * Parse all the histograms available in the `Histos.saf` file into interactable histogram object.
 
 ```python
 import ma5_expert as ma5
+
 collection = ma5.histogram.Collection(
-    "examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf", 
-    xsection=5.689, lumi=139.
+        "docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689/Output/SAF/defaultset/atlas_susy_2018_31/Histograms/histos.saf",
+        xsection = 5.689, lumi = 139.
 )
 
 print(collection)
@@ -179,8 +186,38 @@ plt.xlim([min(bins), max(bins)])
 plt.show()
 ```
 <p align="center">
-<img src="./examples/SRA_Mh.png" alt="SRA_Mh" style="width:400px;"/>
+<img src="docs/examples/SRA_Mh.png" alt="SRA_Mh" style="width:400px;"/>
 </p>
+
+[back to top](#outline)
+
+### Integration to Public Analysis Database through MadAnalysis 5
+
+`ma5-expert` is capable of running MadAnalysis sub-modules through a backend manager. Desired MadAnalysis 
+backend can be set via
+```python
+import ma5_expert as ma5
+ma5.BackendManager.set_madanalysis_backend("/PATH/TO/MADANALYSIS5")
+```
+This will initiate the MadAnalysis backend to be used. Then one can use the reinterpretation tools such as 
+exclusion limit computation, externally. One can initiate PAD interface via
+```python
+interface = ma5.pad.PADInterface(
+    sample_path="ma5_expert/docs/examples/mass1000005_300.0_mass1000022_60.0_mass1000023_250.0_xs_5.689",
+    dataset_name="defaultset"
+)
+```
+where `sample_path` is the main location of the analysis which has been held, and `dataset_name` is the name
+of the dataset which corresponds to the particular folder name under `sample_path + /Outputs/SAF/`. Then results
+can be computed via
+```python
+results = interface.compute_exclusion("atlas_susy_2018_31", 5.689, ma5.backend.PADType.PADForSFS)
+```
+Note that the given example only computes for `atlas_susy_2018_31` and this analysis has been held under `PADForSFS`
+which is indicated via `PADType`. This simply tells function where to look to find corresponding info file, which 
+assumes that `PADForSFS` has been installed. The value `5.689` sets the cross section in pb. 
+
+[back to top](#outline)
 
 ### Citation 
 Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
@@ -201,21 +238,9 @@ Developed for [arXiv:2006.09387](http://arxiv.org/abs/2006.09387)
 }
 ```
 
-
+[back to top](#outline)
 ## TODO
 
-- [x] Clean cutflow reader needs optimization and clarity
-
-- [x] Generalize table writer and add latex writer
-
-- [x] Histogram reader
-
 - [ ] Overall Ma5 Analysis parser
-
-- [x] Some experimental analysis requires MC event comparison table. This needs to be added.
-
-- [x] Combine collections with + operator and normalize to a certain luminosity with * operator.
-
-- [x] Add MC uncertainties
 
 - [ ] Add theoretical uncertainties
