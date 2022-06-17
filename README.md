@@ -2,6 +2,8 @@
 [![EPJC](https://img.shields.io/static/v1?style=plastic&label=DOI&message=10.1140/epjc/s10052-021-09052-5&color=blue)](https://doi.org/10.1140/epjc/s10052-021-09052-5)
 [![arxiv](https://img.shields.io/static/v1?style=plastic&label=arXiv&message=2006.09387&color=brightgreen)](https://arxiv.org/abs/2006.09387)
 
+[![CI](https://github.com/MadAnalysis/ma5_expert/actions/workflows/pytest.yml/badge.svg?style=plastic)](https://github.com/MadAnalysis/ma5_expert/actions/workflows/pytest.yml)
+
  MadAnalysis 5 output interpreter for expert mode. Parses the cutflow and histogram collections and 
  constructs it with an interactable interface. 
 
