@@ -78,11 +78,11 @@ class CutFlow:
         return ((ix, cut) for ix, cut in enumerate(self._data))
 
     def keys(self):
-        return (cut.id for cut in self._data)
+        return (cut.name for cut in self._data)
 
     def getCut(self, id):
         for cut in self:
-            if cut.id == id:
+            if cut.name == id:
                 return cut
 
         return None

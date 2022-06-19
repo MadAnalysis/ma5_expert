@@ -1,13 +1,12 @@
 from math import sqrt
-
-from ma5_expert.system.exceptions import InvalidInput
-
-from typing import List, Any, Union, Tuple, Text, Dict, Sequence, Optional
+from dataclasses import dataclass, field
+from typing import Any, Text, Optional
 import logging
 
 log = logging.getLogger("ma5_expert")
 
 
+@dataclass
 class Cut:
     """
     Cut object
@@ -34,59 +33,20 @@ class Cut:
         luminosity [fb^-1]
     """
 
-    def __init__(
-        self,
-        name: Optional[Text] = "__unknown_cut__",
-        Nentries: Optional[int] = None,
-        sumw: Optional[float] = None,
-        sumw2: Optional[float] = None,
-        previous_cut: Optional[Any] = None,
-        initial_cut: Optional[Any] = None,
-        xsec: Optional[float] = None,
-        Nevents: Optional[float] = None,
-        lumi: Optional[float] = None,
-    ):
+    name: Optional[Text] = "__unknown_cut__"
+    Nentries: Optional[int] = None
+    sumW: Optional[float] = None
+    sumW2: Optional[float] = None
+    _previous_cut: Optional[Any] = field(default=None, repr=False)
+    _initial_cut: Optional[Any] = field(default=None, repr=False)
+    xsec: Optional[float] = None
+    _Nevents: Optional[float] = field(default=None, repr=False)
+    lumi: Optional[float] = None
 
-        self.id = name  # Name of the cut
-        self.Nentries = Nentries if Nentries is not None else 0  # Number of MC events
-        self._sumW = sumw  # sum of weights
-        self._sumW2 = sumw2  # sum of square of the weights
-        self._initial_cut = initial_cut
-        self._previous_cut = previous_cut
-        self._lumi = lumi
-        self._xsection = xsec
-
-        if Nevents is not None:
-            self._Nevents = Nevents
-
-    @property
-    def sumW(self):
-        """
-        Sum of weights
-        """
-        return self._sumW
-
-    @property
-    def xsec(self) -> float:
-        """
-        Cross section [pb]
-        """
-        if hasattr(self, "_xsection"):
-            return self._xsection
-        else:
-            return -1
-
-    @xsec.setter
-    def xsec(self, val: float) -> None:
-        self._xsection = xsec
-        if hasattr(self, "_Nevents"):
+    def __post_init__(self):
+        if self._Nevents is None:
             delattr(self, "_Nevents")
-
-    @property
-    def lumi(self):
-        if self._lumi is not None:
-            return self._lumi
-        return -1
+        self.lumi = self.lumi if self.lumi is not None else -1
 
     @property
     def eff(self):
@@ -98,7 +58,7 @@ class Cut:
                 try:
                     return self.sumW / self._initial_cut.sumW
                 except ZeroDivisionError as err:
-                    return 0.
+                    return 0.0
             else:
                 try:
                     return float(self.Nevents) / self._initial_cut.Nevents
@@ -159,10 +119,8 @@ class Cut:
         """
         Monte Carlo uncertainty
         """
-        if self.Nentries > 0 and self._lumi is not None:
-            return self.Nevents * sqrt(
-                self.eff * (1.0 - self.eff) / float(self.Nentries)
-            )
+        if self.Nentries > 0 and self.lumi > 0:
+            return self.Nevents * sqrt(self.eff * (1.0 - self.eff) / float(self.Nentries))
 
         return 0.0
 
@@ -173,7 +131,7 @@ class Cut:
         else:
             if self.lumi >= 0.0:
                 if self.xsec >= 0.0:
-                    return self.xsec * self.eff * 1000.0 * self._lumi
+                    return self.xsec * self.eff * 1000.0 * self.lumi
                 else:
                     return self.eff * self._initial_cut.Nevents
             else:
@@ -183,7 +141,7 @@ class Cut:
     def __repr__(self):
         nentries = self.Nentries if self.Nentries is not None else -1
         txt = (
-            f"  * {self.id} : \n"
+            f"  * {self.name} : \n"
             + f"     - Number of Entries    : {nentries:.0f}\n"
             + f"     - Number of Events     : {self.Nevents:.3f} ± {self.mc_unc:.3f}(ΔMC)\n"
             + f"     - Cut & Rel Efficiency : {self.eff:.3f}, {self.rel_eff:.3f}\n"

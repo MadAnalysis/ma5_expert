@@ -159,7 +159,7 @@ class CutFlowTable:
             txt += "\\\ \\hline\n"
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
-                name = cut.id
+                name = cut.name
                 if "$" not in name:
                     name = name.replace("_", " ")
                 txt += "      " + name.ljust(40, " ") + "& "
@@ -420,7 +420,7 @@ class CutFlowTable:
                     txt += "\\\ \\hline\n"
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
-                name = cut.id
+                name = cut.name
                 if "$" not in name:
                     name = name.replace("_", " ")
                 txt += "      " + name.ljust(40, " ") + "& "
