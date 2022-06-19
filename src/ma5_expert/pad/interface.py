@@ -1,11 +1,11 @@
 from ma5_expert.backend import PADType, BackendManager
 from ma5_expert.system.exceptions import PADException, InvalidSamplePath, BackendException
-from typing import Text, Dict, Optional, Callable, MutableSequence, List
+from typing import Text, Dict, Optional, Callable, List
 import os
 from dataclasses import dataclass
 
 CustomCutFlowReader = Callable[
-    [Text, MutableSequence, Dict[Text, Dict[Text, float]]], Dict[Text, Dict[Text, float]]
+    [Text, List[Text], Dict[Text, Dict[Text, float]]], Dict[Text, Dict[Text, float]]
 ]
 
 
