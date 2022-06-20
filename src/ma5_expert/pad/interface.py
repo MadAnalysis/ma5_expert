@@ -94,10 +94,14 @@ class PADInterface:
         if custom_cutflow_reader is not None:
             regiondata = custom_cutflow_reader(cutflow_path, regions, regiondata)
         else:
+            if not os.path.isdir(cutflow_path):
+                raise InvalidSamplePath(
+                    msg=f"Can not find cutflows at {cutflow_path}", path=cutflow_path
+                )
             regiondata = run_recast.read_cutflows(cutflow_path, regions, regiondata)
             if regiondata == -1:
                 raise PADException(
-                    msg=f"Problem occured during parsing the cutflows. please check: {cutflow_path}",
+                    msg=f"Problem occurred during parsing the cutflows. please check: {cutflow_path}",
                     details={"cutflow_path": cutflow_path},
                 )
 
