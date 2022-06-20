@@ -67,7 +67,7 @@ class PADInterface:
         if BackendManager.MadAnalysis5 is None:
             raise BackendException()
 
-        if not os.path.isdir(self.sample_path):
+        if not os.path.isdir(self.sample_path) and custom_cutflow_reader is not None:
             raise InvalidSamplePath(
                 msg=f"Can not find sample {self.sample_path}", path=self.sample_path
             )
