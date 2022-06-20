@@ -24,16 +24,6 @@ class PADInterface:
     sample_path: Text
     dataset_name: Text
 
-    def __post_init__(self):
-        if not os.path.isdir(self.sample_path):
-            raise InvalidSamplePath(msg="Please provide a valid sample path", path=self.sample_path)
-        dataset_path = os.path.join(self.sample_path, "Output/SAF", self.dataset_name)
-        if not os.path.isdir(dataset_path):
-            raise InvalidSamplePath(
-                msg=f"Please provide a valid dataset. Can not find {dataset_path}",
-                path=dataset_path,
-            )
-
     def compute_exclusion(
         self,
         analysis: Text,
