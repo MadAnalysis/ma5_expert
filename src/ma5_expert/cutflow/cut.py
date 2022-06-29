@@ -41,12 +41,7 @@ class Cut:
     _initial_cut: Optional[Any] = field(default=None, repr=False)
     xsec: Optional[float] = None
     _Nevents: Optional[float] = field(default=None, repr=False)
-    lumi: Optional[float] = None
-
-    def __post_init__(self):
-        if self._Nevents is None:
-            delattr(self, "_Nevents")
-        self.lumi = self.lumi if self.lumi is not None else -1
+    lumi: float = -1.0
 
     @property
     def eff(self):
@@ -109,7 +104,7 @@ class Cut:
             try:
                 return self.Nentries / self._previous_cut.Nentries
             except ZeroDivisionError as err:
-                log.warning("Previous entry has no MC event")
+                log.warning(f"Previous entry (cut named {self._previous_cut.name}) has no MC event")
                 return 0.0
 
         return -1
@@ -126,7 +121,7 @@ class Cut:
 
     @property
     def Nevents(self) -> float:
-        if hasattr(self, "_Nevents"):
+        if self._Nevents is not None:
             return self._Nevents
         else:
             if self.lumi >= 0.0:

@@ -20,6 +20,7 @@ class PADInterface:
         name of the dataset
 
     """
+    __slots__ = "sample_path", "dataset_name"
 
     sample_path: Text
     dataset_name: Text
