@@ -31,6 +31,7 @@ class PADInterface:
         xsection: float,
         padtype: PADType,
         luminosity: Optional[float] = None,
+        info_file: Optional[Text] = None,
         custom_cutflow_reader: Optional[CustomCutFlowReader] = None,
     ) -> Dict:
         """
@@ -46,6 +47,8 @@ class PADInterface:
             Indicates the detector backend of the analysis
         luminosity: Optional[float]
             if none, default value will be used.
+        info_file: Optional[Text]
+            Optional info file path. if None it will be read from PAD.
         custom_cutflow_reader: Callable
             A user defined function that takes cutflow path, list of regions and region data
             and returns updated region data.
@@ -71,9 +74,19 @@ class PADInterface:
         regions: List[Text]
         regiondata: Dict[Text, Dict[Text, float]]
 
-        lumi, regions, regiondata = run_recast.parse_info_file(
-            ET, analysis, "default" if luminosity is None else luminosity
-        )
+        if info_file:
+            if not os.path.isfile(info_file):
+                raise PADException(f"Can not find info file: {info_file}")
+            with open(info_file, "r") as info_input:
+                info_tree = ET.parse(info_input)
+            lumi, regions, regiondata = run_recast.header_info_file(
+                info_tree, analysis, "default" if luminosity is None else luminosity
+            )
+        else:
+            lumi, regions, regiondata = run_recast.parse_info_file(
+                ET, analysis, "default" if luminosity is None else luminosity
+            )
+
         if -1 in [lumi, regions, regiondata]:
             info_path = os.path.join(
                 run_recast.pad, "Build/SampleAnalyzer/User/Analyzer", analysis + ".info"
