@@ -20,6 +20,7 @@ class PADInterface:
         name of the dataset
 
     """
+
     __slots__ = "sample_path", "dataset_name"
 
     sample_path: Text
@@ -33,6 +34,7 @@ class PADInterface:
         luminosity: Optional[float] = None,
         info_file: Optional[Text] = None,
         custom_cutflow_reader: Optional[CustomCutFlowReader] = None,
+        expectation_assumption: Text = "apriori",
     ) -> Dict:
         """
         Compute exclusion limit
@@ -52,6 +54,8 @@ class PADInterface:
         custom_cutflow_reader: Callable
             A user defined function that takes cutflow path, list of regions and region data
             and returns updated region data.
+        expectation_assumption: Text
+            assumption on expectation value computation.
 
         Returns
         -------
@@ -66,7 +70,9 @@ class PADInterface:
                 msg=f"Can not find sample {self.sample_path}", path=self.sample_path
             )
 
-        run_recast = BackendManager.MadAnalysis5.get_run_recast(self.sample_path, padtype)
+        run_recast = BackendManager.MadAnalysis5.get_run_recast(
+            self.sample_path, padtype, expectation_assumption
+        )
 
         ET = run_recast.check_xml_scipy_methods()
 
