@@ -122,7 +122,7 @@ class MadAnalysisBackend:
         from logging import DEBUG
         from madanalysis.misc.run_recast import RunRecast
 
-        self.ma5_main.recast.expectation_assumption = str(
+        self.ma5_main.recasting.expectation_assumption = str(
             ExpectationAssumption.get(expectation_assumption)
         )
 
