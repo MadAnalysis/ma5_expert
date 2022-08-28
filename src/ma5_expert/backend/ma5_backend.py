@@ -27,7 +27,8 @@ class ExpectationAssumption(Enum):
     def __repr__(self):
         return self.value
 
-    def get(self, value):
+    @classmethod
+    def get(cls, value):
         if isinstance(value, ExpectationAssumption):
             return value
         elif isinstance(value, str):
