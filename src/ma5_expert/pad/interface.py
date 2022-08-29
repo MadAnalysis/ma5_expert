@@ -75,6 +75,7 @@ class PADInterface:
         )
 
         ET = run_recast.check_xml_scipy_methods()
+        run_recast.SetCLsCalculator()
 
         lumi: float
         regions: List[Text]
