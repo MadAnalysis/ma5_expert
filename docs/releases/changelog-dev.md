@@ -8,6 +8,12 @@
   * Improve the logger output
     ([#7](https://github.com/MadAnalysis/ma5_expert/pull/7)).
 
+  * Improve CLs computer.
+    ([#8](https://github.com/MadAnalysis/ma5_expert/pull/8))
+
+  * Improved cutflow structure.
+    ([#8](https://github.com/MadAnalysis/ma5_expert/pull/8))
+
 ## Bug fixes
  * Make exceptions accessible through `ma5.system` module
     ([#7](https://github.com/MadAnalysis/ma5_expert/pull/7)).
