@@ -159,7 +159,7 @@ class CutFlowTable:
             txt += "\\\ \\hline\n"
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
-                name = cut.id
+                name = cut.name
                 if "$" not in name:
                     name = name.replace("_", " ")
                 txt += "      " + name.ljust(40, " ") + "& "
@@ -183,7 +183,7 @@ class CutFlowTable:
                     if raw:
                         txt += tmp.format(
                             scientific_LaTeX(cut.Nentries, sty=event_style),
-                            cut.raw_rel_eff,
+                            cut.mc_rel_eff,
                         )
                     else:
                         if not (MCunc and cut.Nentries > 0):
@@ -222,7 +222,7 @@ class CutFlowTable:
                         if raw:
                             txt += tmp.format(
                                 scientific_LaTeX(smp[cutID].Nentries, sty=event_style),
-                                smp[cutID].raw_rel_eff,
+                                smp[cutID].mc_rel_eff,
                             )
                         else:
                             if not (MCunc and smp[cutID].Nentries > 0):
@@ -252,12 +252,15 @@ class CutFlowTable:
                             + " "
                         )
                         if raw:
-                            rel_eff = abs(
-                                1 - (smp[cutID].raw_rel_eff / cut.raw_rel_eff)
-                            )
+                            try:
+                                rel_eff = abs(
+                                    1 - (smp[cutID].mc_rel_eff / cut.mc_rel_eff)
+                                )
+                            except ZeroDivisionError as err:
+                                rel_eff = -1
                             txt += tmp.format(
                                 scientific_LaTeX(smp[cutID].Nentries, sty=event_style),
-                                smp[cutID].raw_rel_eff,
+                                smp[cutID].mc_rel_eff,
                                 rel_eff * 100.0,
                             )
                         else:
@@ -420,7 +423,7 @@ class CutFlowTable:
                     txt += "\\\ \\hline\n"
             # write cutflow
             for cutID, cut in self.ref_sample[SR].items():
-                name = cut.id
+                name = cut.name
                 if "$" not in name:
                     name = name.replace("_", " ")
                 txt += "      " + name.ljust(40, " ") + "& "
@@ -578,12 +581,7 @@ class CutFlowTable:
                 + "clean:\n"
                 + "\trm -f *.aux *.log *.out *.toc *.blg *.dvi *.t1 *.1 *.mp *spl *.lol *Notes.bib\n"
             )
-            if make:
-                try:
-                    file.close()
-                    os.system("make")
-                except:
-                    print("Compilation failed.")
+
         else:
             raise ValueError("Can not find " + file.name)
 

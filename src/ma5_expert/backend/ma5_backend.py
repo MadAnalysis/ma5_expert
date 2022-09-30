@@ -2,13 +2,40 @@ from dataclasses import dataclass
 import os, sys
 
 from ma5_expert.system.exceptions import MadAnalysisPath
-from typing import Optional, Text
+from typing import Optional, Text, Union
 from enum import Enum, auto
 
 
 class PADType(Enum):
-    PAD = auto()
-    PADForSFS = auto()
+    PAD = "PAD"
+    PADForSFS = "PADForSFS"
+
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return self.value
+
+
+class ExpectationAssumption(Enum):
+    APRIORI = "apriori"
+    APOSTERIORI = "aposteriori"
+
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return self.value
+
+    @classmethod
+    def get(cls, value):
+        if isinstance(value, ExpectationAssumption):
+            return value
+        elif isinstance(value, str):
+            if value.lower() == str(ExpectationAssumption.APRIORI):
+                return ExpectationAssumption.APRIORI
+            else:
+                return ExpectationAssumption.APOSTERIORI
 
 
 @dataclass
@@ -72,7 +99,12 @@ class MadAnalysisBackend:
         if not self.ma5_main.session_info.has_padsfs:
             self.ma5_main.session_info.has_padsfs = self.enforce_padforsfs
 
-    def get_run_recast(self, sample_path: Text, padtype: PADType):
+    def get_run_recast(
+        self,
+        sample_path: Text,
+        padtype: PADType,
+        expectation_assumption: Union[ExpectationAssumption, Text] = ExpectationAssumption.APRIORI,
+    ):
         """
         Get run recast class
 
@@ -80,6 +112,8 @@ class MadAnalysisBackend:
         ----------
         sample_path: Text
             PAth of the MadAnalysis workspace
+        expectation_assumption: ExpectationAssumption
+            assumption on expectation
 
         Returns
         -------
@@ -87,6 +121,10 @@ class MadAnalysisBackend:
         """
         from logging import DEBUG
         from madanalysis.misc.run_recast import RunRecast
+
+        self.ma5_main.recasting.expectation_assumption = str(
+            ExpectationAssumption.get(expectation_assumption)
+        )
 
         run_recast = RunRecast(self.ma5_main, sample_path)
         if padtype == PADType.PAD:

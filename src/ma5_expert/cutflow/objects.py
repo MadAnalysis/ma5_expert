@@ -53,7 +53,7 @@ class CutFlow:
     @xsec.setter
     def xsec(self, val: float):
         for cut in self:
-            cut.xsec = xsec
+            cut.xsec = val
 
     @property
     def lumi(self):
@@ -62,7 +62,7 @@ class CutFlow:
     @lumi.setter
     def lumi(self, val: float):
         for cut in self:
-            cut._lumi = lumi
+            cut._lumi = val
 
     @property
     def CutNames(self):
@@ -78,11 +78,11 @@ class CutFlow:
         return ((ix, cut) for ix, cut in enumerate(self._data))
 
     def keys(self):
-        return (cut.id for cut in self._data)
+        return (cut.name for cut in self._data)
 
     def getCut(self, id):
         for cut in self:
-            if cut.id == id:
+            if cut.name == id:
                 return cut
 
         return None

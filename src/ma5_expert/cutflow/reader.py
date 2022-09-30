@@ -11,7 +11,7 @@ from .objects import CutFlow
 log = logging.getLogger("ma5_expert")
 
 
-class Collection(object):
+class Collection:
     def __init__(self, cutflow_path="", saf_file=False, **kwargs):
         """
 
@@ -83,12 +83,12 @@ class Collection(object):
                         name="Initial",
                         Nentries=int(cutflow[i].split()[0])
                         + int(cutflow[i].split()[1]),
-                        sumw=float(cutflow[i + 1].split()[0])
+                        sumW=float(cutflow[i + 1].split()[0])
                         + float(cutflow[i + 1].split()[1]),
-                        sumw2=float(cutflow[i + 2].split()[0])
+                        sumW2=float(cutflow[i + 2].split()[0])
                         + float(cutflow[i + 2].split()[1]),
                         xsec=xsec,
-                        Nevents=nevents,
+                        _Nevents=nevents,
                         lumi=self.lumi,
                     )
                     currentSR.addCut(current_cut)
@@ -99,13 +99,13 @@ class Collection(object):
                         name=cutflow[i].split('"')[1],
                         Nentries=int(cutflow[i + 1].split()[0])
                         + int(cutflow[i + 1].split()[1]),
-                        sumw=float(cutflow[i + 2].split()[0])
+                        sumW=float(cutflow[i + 2].split()[0])
                         + float(cutflow[i + 2].split()[1]),
-                        sumw2=float(cutflow[i + 3].split()[0])
+                        sumW2=float(cutflow[i + 3].split()[0])
                         + float(cutflow[i + 3].split()[1]),
                         xsec=xsec,
-                        previous_cut=currentSR[-1],
-                        initial_cut=currentSR[0],
+                        _previous_cut=currentSR[-1],
+                        _initial_cut=currentSR[0],
                         lumi=self.lumi,
                     )
                     currentSR.addCut(current_cut)
@@ -196,5 +196,5 @@ class Collection(object):
     def regiondata(self):
         regdat = {}
         for k, i in self.items():
-            regdat[k] = i.regiondata[i.id]
+            regdat[k] = i.regiondata[i.name]
         return regdat
