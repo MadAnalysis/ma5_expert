@@ -116,7 +116,7 @@ class Collection:
                 self._srID.append(currentSR.id)
             except Exception as err:
                 log.error(err)
-                currentSR.id = f"SR_{len(self.srID)}"
+                currentSR.id = f"SR_{len(self._srID)}"
                 setattr(self, currentSR.id, currentSR)
                 self._srID.append(currentSR.id)
 
@@ -156,15 +156,15 @@ class Collection:
             if ix == 0:
                 current_cut = Cut(
                     name=name,
-                    Nevents=val,
+                    _Nevents = val,
                     Nentries=entries,
                 )
             else:
                 current_cut = Cut(
                     name=name,
-                    previous_cut=SR[-1],
-                    initial_cut=SR[0],
-                    Nevents=val,
+                    _previous_cut=SR[-1],
+                    _initial_cut=SR[0],
+                    _Nevents=val,
                     Nentries=entries,
                 )
             SR.addCut(current_cut)
@@ -174,7 +174,7 @@ class Collection:
             self._srID.append(SR.id)
         except Exception as err:
             log.error(err)
-            SR.id = f"SR_{len(self.srID)}"
+            SR.id = f"SR_{len(self._srID)}"
             setattr(self, SR.id, SR)
             self._srID.append(SR.id)
 
