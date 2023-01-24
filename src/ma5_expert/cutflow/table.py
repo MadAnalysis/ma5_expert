@@ -141,12 +141,7 @@ class CutFlowTable:
                 # if not self.sample_names.index(smp) == len(self.sample_names)-1:
                 #     txt += '&'  # else:
             txt += "\\\ \\hline\\hline\n"
-            txt += (
-                "      & "
-                + (not raw) * "Events"
-                + (raw) * "Entries"
-                + " & $\\varepsilon$"
-            )
+            txt += "      & " + (not raw) * "Events" + (raw) * "Entries" + " & $\\varepsilon$"
             for smp in self.sample_names:
                 txt += (
                     " & "
@@ -166,13 +161,9 @@ class CutFlowTable:
                 if cutID == 0:
                     tmp = "{}" + " & - "
                     if raw:
-                        txt += tmp.format(
-                            scientific_LaTeX(cut.Nentries, sty=event_style)
-                        )
+                        txt += tmp.format(scientific_LaTeX(cut.Nentries, sty=event_style))
                     else:
-                        txt += tmp.format(
-                            scientific_LaTeX(cut.Nevents, sty=event_style)
-                        )
+                        txt += tmp.format(scientific_LaTeX(cut.Nevents, sty=event_style))
                 else:
                     tmp = (
                         "{}"
@@ -207,14 +198,11 @@ class CutFlowTable:
                                 scientific_LaTeX(smp[cutID].Nentries, sty=event_style)
                             )
                         else:
-                            txt += tmp.format(
-                                scientific_LaTeX(smp[cutID].Nevents, sty=event_style)
-                            )
+                            txt += tmp.format(scientific_LaTeX(smp[cutID].Nevents, sty=event_style))
                     elif cutID > 0 and cut.rel_eff == 0:
                         tmp = (
                             " & {}"
-                            + (MCunc and smp[cutID].Nentries > 0)
-                            * (" $ \pm $ " + event_style)
+                            + (MCunc and smp[cutID].Nentries > 0) * (" $ \pm $ " + event_style)
                             + " & "
                             + eff_style
                             + " & - "
@@ -227,24 +215,19 @@ class CutFlowTable:
                         else:
                             if not (MCunc and smp[cutID].Nentries > 0):
                                 txt += tmp.format(
-                                    scientific_LaTeX(
-                                        smp[cutID].Nevents, sty=event_style
-                                    ),
+                                    scientific_LaTeX(smp[cutID].Nevents, sty=event_style),
                                     smp[cutID].rel_eff,
                                 )
                             else:
                                 txt += tmp.format(
-                                    scientific_LaTeX(
-                                        smp[cutID].Nevents, sty=event_style
-                                    ),
+                                    scientific_LaTeX(smp[cutID].Nevents, sty=event_style),
                                     smp[cutID].mc_unc,
                                     smp[cutID].rel_eff,
                                 )
                     else:
                         tmp = (
                             " & {}"
-                            + (MCunc and smp[cutID].Nentries > 0)
-                            * (" $ \pm $ " + event_style)
+                            + (MCunc and smp[cutID].Nentries > 0) * (" $ \pm $ " + event_style)
                             + " & "
                             + eff_style
                             + " & "
@@ -253,9 +236,7 @@ class CutFlowTable:
                         )
                         if raw:
                             try:
-                                rel_eff = abs(
-                                    1 - (smp[cutID].mc_rel_eff / cut.mc_rel_eff)
-                                )
+                                rel_eff = abs(1 - (smp[cutID].mc_rel_eff / cut.mc_rel_eff))
                             except ZeroDivisionError as err:
                                 rel_eff = -1
                             txt += tmp.format(
@@ -267,17 +248,13 @@ class CutFlowTable:
                             rel_eff = abs(1 - (smp[cutID].rel_eff / cut.rel_eff))
                             if not (MCunc and smp[cutID].Nentries > 0):
                                 txt += tmp.format(
-                                    scientific_LaTeX(
-                                        smp[cutID].Nevents, sty=event_style
-                                    ),
+                                    scientific_LaTeX(smp[cutID].Nevents, sty=event_style),
                                     smp[cutID].rel_eff,
                                     rel_eff * 100.0,
                                 )
                             else:
                                 txt += tmp.format(
-                                    scientific_LaTeX(
-                                        smp[cutID].Nevents, sty=event_style
-                                    ),
+                                    scientific_LaTeX(smp[cutID].Nevents, sty=event_style),
                                     smp[cutID].mc_unc,
                                     smp[cutID].rel_eff,
                                     rel_eff * 100.0,
@@ -437,13 +414,9 @@ class CutFlowTable:
                     if cutID == 0:
                         txt += "{:.1f} & - ".format(smp[cutID].Nevents)
                     elif cutID > 0 and cut.rel_eff == 0:
-                        txt += "{:.1f} & {:.3f} ".format(
-                            smp[cutID].Nevents, smp[cutID].rel_eff
-                        )
+                        txt += "{:.1f} & {:.3f} ".format(smp[cutID].Nevents, smp[cutID].rel_eff)
                     else:
-                        txt += "{:.1f} & {:.3f} ".format(
-                            smp[cutID].Nevents, smp[cutID].rel_eff
-                        )
+                        txt += "{:.1f} & {:.3f} ".format(smp[cutID].Nevents, smp[cutID].rel_eff)
                     if smp != self.samples[-1][SR]:
                         txt += " & "
                     else:
@@ -455,11 +428,7 @@ class CutFlowTable:
                     for sample in self.samples:
                         smp = sample[SR]
                         fom = FoM(smp[cutID].Nevents, cut.Nevents, sys=sys)
-                        txt += (
-                            "\\multicolumn{2}{c}{"
-                            + "{:.3f}\\%".format(100.0 * fom.S_B)
-                            + "}"
-                        )
+                        txt += "\\multicolumn{2}{c}{" + "{:.3f}\\%".format(100.0 * fom.S_B) + "}"
                         if smp != self.samples[-1][SR]:
                             txt += " & "
                         else:
@@ -469,11 +438,7 @@ class CutFlowTable:
                     for sample in self.samples:
                         smp = sample[SR]
                         fom = FoM(smp[cutID].Nevents, cut.Nevents, sys=sys)
-                        txt += (
-                            "\\multicolumn{2}{c}{"
-                            + "{:.3f}\\%".format(100.0 * fom.S_SB)
-                            + "}"
-                        )
+                        txt += "\\multicolumn{2}{c}{" + "{:.3f}\\%".format(100.0 * fom.S_SB) + "}"
                         if smp != self.samples[-1][SR]:
                             txt += " & "
                         else:
@@ -494,11 +459,7 @@ class CutFlowTable:
                         for sample in self.samples:
                             smp = sample[SR]
                             fom = FoM(smp[cutID].Nevents, cut.Nevents, sys=sys)
-                            txt += (
-                                "\\multicolumn{2}{c}{"
-                                + "{:.3f}".format(fom.sig_sys)
-                                + "}"
-                            )
+                            txt += "\\multicolumn{2}{c}{" + "{:.3f}".format(fom.sig_sys) + "}"
                             if smp != self.samples[-1][SR]:
                                 txt += " & "
                             else:
@@ -526,9 +487,7 @@ class CutFlowTable:
                 "    \\caption{"
                 + SR.replace("_", " ")
                 + (cut.Nentries < 100)
-                * "(This SR needs more event:: MC event count = {:.0f})".format(
-                    cut.Nentries
-                )
+                * "(This SR needs more event:: MC event count = {:.0f})".format(cut.Nentries)
                 + "}\n"
             )
             txt += "  \\end{center}\n"
@@ -538,9 +497,7 @@ class CutFlowTable:
             else:
                 print(txt)
         if file != None:
-            file.write(
-                "\n\n\n\n" + r"\end{landscape}" + "\n" + r"\end{document}" + "\n"
-            )
+            file.write("\n\n\n\n" + r"\end{landscape}" + "\n" + r"\end{document}" + "\n")
             if kwargs.get("make", True):
                 self.WriteMake(file, make=kwargs.get("make", True))
 
@@ -590,15 +547,11 @@ def scientific_LaTeX(val, sty="{:.1f}"):
     if val >= 1e5:
         tmp = "{:.1e}".format(val)
         tmp = [float(x) for x in tmp.split("e+")]
-        tmp = (
-            r"${:.1f} \times 10^".format(tmp[0]) + "{" + "{:.0f}".format(tmp[1]) + "}$"
-        )
+        tmp = r"${:.1f} \times 10^".format(tmp[0]) + "{" + "{:.0f}".format(tmp[1]) + "}$"
     elif val < 1e-3 and val > 0.0:
         tmp = "{:.1e}".format(val)
         tmp = [float(x) for x in tmp.split("e-")]
-        tmp = (
-            r"${:.1f} \times 10^".format(tmp[0]) + "{-" + "{:.0f}".format(tmp[1]) + "}$"
-        )
+        tmp = r"${:.1f} \times 10^".format(tmp[0]) + "{-" + "{:.0f}".format(tmp[1]) + "}$"
     else:
         tmp = sty.format(val)
     return tmp

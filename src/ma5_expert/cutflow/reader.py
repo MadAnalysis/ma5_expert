@@ -65,9 +65,7 @@ class Collection:
             if key == item:
                 return sr
 
-    def _readCollection(
-        self, xsec: Optional[float] = None, nevents: Optional[float] = None
-    ):
+    def _readCollection(self, xsec: Optional[float] = None, nevents: Optional[float] = None):
         for sr in [x for x in os.listdir(self.cutflow_path) if x.endswith(".saf")]:
             fl = os.path.join(self.cutflow_path, sr)
             with open(fl, "r") as f:
@@ -81,12 +79,9 @@ class Collection:
                     i += 2
                     current_cut = Cut(
                         name="Initial",
-                        Nentries=int(cutflow[i].split()[0])
-                        + int(cutflow[i].split()[1]),
-                        sumW=float(cutflow[i + 1].split()[0])
-                        + float(cutflow[i + 1].split()[1]),
-                        sumW2=float(cutflow[i + 2].split()[0])
-                        + float(cutflow[i + 2].split()[1]),
+                        Nentries=int(cutflow[i].split()[0]) + int(cutflow[i].split()[1]),
+                        sumW=float(cutflow[i + 1].split()[0]) + float(cutflow[i + 1].split()[1]),
+                        sumW2=float(cutflow[i + 2].split()[0]) + float(cutflow[i + 2].split()[1]),
                         xsec=xsec,
                         _Nevents=nevents,
                         lumi=self.lumi,
@@ -97,12 +92,9 @@ class Collection:
                     i += 1
                     current_cut = Cut(
                         name=cutflow[i].split('"')[1],
-                        Nentries=int(cutflow[i + 1].split()[0])
-                        + int(cutflow[i + 1].split()[1]),
-                        sumW=float(cutflow[i + 2].split()[0])
-                        + float(cutflow[i + 2].split()[1]),
-                        sumW2=float(cutflow[i + 3].split()[0])
-                        + float(cutflow[i + 3].split()[1]),
+                        Nentries=int(cutflow[i + 1].split()[0]) + int(cutflow[i + 1].split()[1]),
+                        sumW=float(cutflow[i + 2].split()[0]) + float(cutflow[i + 2].split()[1]),
+                        sumW2=float(cutflow[i + 3].split()[0]) + float(cutflow[i + 3].split()[1]),
                         xsec=xsec,
                         _previous_cut=currentSR[-1],
                         _initial_cut=currentSR[0],
@@ -139,8 +131,7 @@ class Collection:
     ):
 
         assert len(cut_names) == len(cut_values), (
-            f"Cut names does not match with the values: "
-            f"{len(cut_names)} != {len(cut_values)}"
+            f"Cut names does not match with the values: " f"{len(cut_names)} != {len(cut_values)}"
         )
 
         if Nentries is None:
@@ -156,7 +147,7 @@ class Collection:
             if ix == 0:
                 current_cut = Cut(
                     name=name,
-                    _Nevents = val,
+                    _Nevents=val,
                     Nentries=entries,
                 )
             else:
@@ -181,9 +172,7 @@ class Collection:
     def __repr__(self):
         txt = ""
         for ix, (key, item) in enumerate(self.items()):
-            txt += (
-                (ix != 0) * "\n\n\n" + "   * Signal Region : " + key + "\n" + str(item)
-            )
+            txt += (ix != 0) * "\n\n\n" + "   * Signal Region : " + key + "\n" + str(item)
         return txt
 
     def __str__(self):
