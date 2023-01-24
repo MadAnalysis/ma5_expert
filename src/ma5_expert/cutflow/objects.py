@@ -17,9 +17,7 @@ class CutFlow:
         list of cuts
     """
 
-    def __init__(
-        self, name: Text = "__unknown_cutflow__", cutflow: Sequence[Cut] = None
-    ):
+    def __init__(self, name: Text = "__unknown_cutflow__", cutflow: Sequence[Cut] = None):
         self.id = name
         if cutflow is None:
             self._data = []

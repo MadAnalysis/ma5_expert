@@ -43,11 +43,7 @@ class FoM:
             asimovsig = sqrt(
                 2
                 * (
-                    tot
-                    * log(
-                        (tot * (varb + self.nbkg))
-                        / ((self.nbkg * self.nbkg) + tot * varb)
-                    )
+                    tot * log((tot * (varb + self.nbkg)) / ((self.nbkg * self.nbkg) + tot * varb))
                     - (self.nbkg * self.nbkg / varb)
                     * log(1 + (varb * self.nsignal) / (self.nbkg * (self.nbkg + varb)))
                 )
@@ -66,9 +62,7 @@ class FoM:
             err = power(
                 -(eb * eb)
                 / (
-                    1.0
-                    / (sig * sig)
-                    * log(b / (b + (b * b) * (sig * sig)) * (sig * sig) * s + 1.0)
+                    1.0 / (sig * sig) * log(b / (b + (b * b) * (sig * sig)) * (sig * sig) * s + 1.0)
                     - (b + s)
                     * log(
                         (b + s)
@@ -92,14 +86,9 @@ class FoM:
                         (b + s)
                         * (2.0 * b * (sig * sig) + 1.0)
                         / ((b * b) + (b + s) * (b * b) * (sig * sig))
-                        + (b + (b * b) * (sig * sig))
-                        / ((b * b) + (b + s) * (b * b) * (sig * sig))
+                        + (b + (b * b) * (sig * sig)) / ((b * b) + (b + s) * (b * b) * (sig * sig))
                         - (b + s)
-                        * (
-                            2.0 * (b + s) * b * (sig * sig)
-                            + 2.0 * b
-                            + (b * b) * (sig * sig)
-                        )
+                        * (2.0 * (b + s) * b * (sig * sig) + 2.0 * b + (b * b) * (sig * sig))
                         * (b + (b * b) * (sig * sig))
                         / power((b * b) + (b + s) * (b * b) * (sig * sig), 2.0)
                     )
@@ -115,9 +104,7 @@ class FoM:
                 / 2.0
                 - 1.0
                 / (
-                    1.0
-                    / (sig * sig)
-                    * log(b / (b + (b * b) * (sig * sig)) * (sig * sig) * s + 1.0)
+                    1.0 / (sig * sig) * log(b / (b + (b * b) * (sig * sig)) * (sig * sig) * s + 1.0)
                     - (b + s)
                     * log(
                         (b + s)
@@ -134,8 +121,7 @@ class FoM:
                     + 1.0
                     / (b + (b * b) * (sig * sig))
                     * (
-                        (b + (b * b) * (sig * sig))
-                        / ((b * b) + (b + s) * (b * b) * (sig * sig))
+                        (b + (b * b) * (sig * sig)) / ((b * b) + (b + s) * (b * b) * (sig * sig))
                         - (b + s)
                         * (b * b)
                         * (b + (b * b) * (sig * sig))
