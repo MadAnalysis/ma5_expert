@@ -10,9 +10,12 @@ if os.path.isfile("./requirements.txt"):
         requirements = f.read()
     requirements = [x for x in requirements.split("\n") if x != ""]
 
+with open("src/ma5_expert/_version.py", "r") as f:
+    version = f.readlines()[-1].split()[-1].strip("\"'")
+
 setup(
     name="ma5_expert",
-    version="3.0.3",
+    version=version,
     description=("MadAnalysis 5 interpreter for Expert mode"),
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,7 +23,7 @@ setup(
     project_urls={
         "Bug Tracker": "https://github.com/MadAnalysis/ma5_expert/issues",
     },
-    download_url="https://github.com/MadAnalysis/ma5_expert/archive/refs/tags/v3.0.3.tar.gz",
+    download_url=f"https://github.com/MadAnalysis/ma5_expert/archive/refs/tags/v{version}.tar.gz",
     author="Jack Y. Araz",
     author_email=("jack.araz@durham.ac.uk"),
     license="MIT",
